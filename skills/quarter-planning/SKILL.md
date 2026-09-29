@@ -5,7 +5,7 @@ license: CC-BY-4.0 AND Apache-2.0. Content under CC BY 4.0, code under Apache-2.
 compatibility: Python 3.11 or newer, and PyYAML. Reads the planning registers, the model sources and the deliverable register at whatever paths [suite.quarter-planning] in the workspace .agents/skill-bindings.toml declares. Those six paths are required and have no default, so the skill carries no directory layout; it assumes no jurisdiction's holidays either.
 metadata:
   author: dermot-obrien
-  version: "3.5.1"
+  version: "3.5.2"
   homepage: https://github.com/dermot-obrien/delivery-planning
   x-skill-requires: ""
   x-derived-from: "https://github.com/dermot-obrien/ai-assisted-work/tree/78ec34e732ace27cc50d322d33383a75fa628092/skills/quarter-planning"
@@ -331,6 +331,8 @@ figure is wrong, fix the script that derives it.
 
 ## Related
 
+- The bundle's documentation, with a quick start, a configuration reference, a command
+  reference and troubleshooting: https://github.com/dermot-obrien/delivery-planning/tree/main/docs
 - The workspace's planning playbook, at the `playbook` binding, which governs the method
 - The deliverable register, at the `register` binding: product types, sizes, and the used-only rule
 - References, each read when its topic comes up: [budget-model.md](references/budget-model.md),

@@ -12,8 +12,8 @@
     {
       "name": "quarter-planning",
       "path": "skills/quarter-planning",
-      "version": "3.5.1",
-      "purl": "pkg:generic/dermot-obrien/delivery-planning/quarter-planning@3.5.1",
+      "version": "3.5.2",
+      "purl": "pkg:generic/dermot-obrien/delivery-planning/quarter-planning@3.5.2",
       "requires": [],
       "check": {
         "command": ["python", "bin/check.py"],

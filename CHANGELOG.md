@@ -6,6 +6,22 @@ Releases of the skills in this bundle, each versioned on its own and headed with
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## quarter-planning [3.5.2] - 2026-09-30
+
+A patch release with the bundle's new documentation. Nothing the skill reads or writes moved.
+
+### Fixed
+
+- `--budget` reported an epic with no `budget_points` as `records budget_points None`. It now says the epic `is given N points by the distribution but records no budget_points`, as the validation does, and points at `--apply`.
+- `references/data-contract.md` said `slugPattern` has the named groups `y` and `q`; the default has `fy` and `q`. It now gives both the default and the test workspace's pattern, and says that `work_item.yaml` and `work_plan.yaml` must exist while `activity.yaml` is optional.
+- `references/check-messages.md` quoted the planned-points message as `its deliverables sum to`; the script says `its products sum to`. Messages that come from a workspace's own checks, not from this skill's scripts, are now marked as such.
+
+### Added
+
+- `quarter.py --help` has a description and names the documentation.
+- `SKILL.md` links the bundle's documentation.
+- `docs/`: a quick start, run end to end on Windows in PowerShell and Git Bash; a page for the skill; concepts; a configuration reference covering every binding key with its type, default, precedence and an example; a command reference; troubleshooting keyed to every message the scripts print; and examples. The README gains install steps for any agent at workspace and user level, a short quick start and an index of the docs.
+
 ## quarter-planning [3.5.1] - 2026-09-30
 
 A patch release: the skill's behaviour is unchanged, and nothing it reads or writes moved. `skills-ref`, the reference validator of the [Agent Skills specification](https://agentskills.io/specification), reported the skill valid before this release, but its `SKILL.md` was 479 lines and about 6,800 body tokens, over the specification's guidance of 5,000. It is now 345 lines and about 4,400.
