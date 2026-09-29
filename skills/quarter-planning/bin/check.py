@@ -25,6 +25,9 @@ if sys.version_info < (3, 11):
     print(f"Python {sys.version.split()[0]} is too old: quarter-planning needs 3.11 or newer "
           "to read skill-bindings.toml.", file=sys.stderr)
     sys.exit(2)
+if sys.argv[1:] in (["-h"], ["--help"]):
+    print(__doc__.strip())
+    sys.exit(0)
 if len(sys.argv) > 1:
     print("usage: check.py   (run from the workspace root; takes no arguments)", file=sys.stderr)
     sys.exit(2)
