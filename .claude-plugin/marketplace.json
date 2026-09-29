@@ -11,7 +11,7 @@
       "source": "./",
       "strict": false,
       "description": "Plan a quarter in two stages: derive a budget of points from the calendar and resourcing, allocate it to epics, then elaborate deliverables and roll their sizes up, with integrity checks, epic cards and links to epic and story pages.",
-      "version": "3.4.0",
+      "version": "3.5.0",
       "author": {
         "name": "Dermot O'Brien",
         "url": "https://github.com/dermot-obrien"

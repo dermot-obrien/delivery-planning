@@ -1,6 +1,6 @@
 # Data contract
 
-What this skill reads, so any workspace can supply it, whether or not it uses a work-management framework. Every location comes from `[suite.quarter-planning]` in the workspace's `.agents/skill-bindings.toml`; nothing has a default path. `tests/fixture/` is a complete, minimal workspace that satisfies this contract, and is the quickest way to see every file in context.
+What this skill reads, so any workspace can supply it, whether or not it uses a work-management framework. The same shapes are published as the bundle's ontology module, `ontology/delivery.schema.json`, which builds on the work layer of AI-Assisted Work. Every location comes from `[suite.quarter-planning]` in the workspace's `.agents/skill-bindings.toml`; nothing has a default path. `tests/fixture/` is a complete, minimal workspace that satisfies this contract, and is the quickest way to see every file in context.
 
 `{quarter}` in a path binding is the quarter's slug, such as `2027-q1`. `slugPattern` says how a slug is spelt, with named groups `y` and `q`, and `quarterLabel` builds the label the model records from them, such as `2027-Q1`.
 
@@ -57,6 +57,14 @@ A workspace that manages work as one folder per work item, as AI-Assisted Work d
 Nothing else needs a framework. A workspace that keeps its epics in `work_item.yaml` alone, written by hand or generated from a tracker, satisfies the contract in full.
 
 ## Checking a workspace
+
+Before any quarter exists, `bin/check.py`, run from the workspace root, checks the binding: the six required paths declared, every declared path resolving (up to `{quarter}`), `slugPattern` compiling and supplying `quarterLabel`'s fields, and PyYAML installed.
+
+```bash
+python <skills>/quarter-planning/bin/check.py
+```
+
+For a quarter:
 
 ```bash
 python <skills>/quarter-planning/bin/quarter.py --quarter <slug>

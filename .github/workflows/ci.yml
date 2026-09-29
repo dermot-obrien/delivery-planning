@@ -21,6 +21,8 @@ jobs:
       # Zero-dependency on purpose, so this job needs no install step.
       - name: Validate skills against the agentskills.io spec
         run: node scripts/validate-skills.mjs skills
+      - name: Validate bundle.json against the bundle schema and the skills
+        run: node scripts/validate-bundle.mjs .
 
   quarter-planning:
     name: quarter-planning tests (Python ${{ matrix.python }}, ${{ matrix.os }})
@@ -63,3 +65,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: fsfe/reuse-action@v6
+
+  ontology:
+    name: Delivery ontology and the post-install check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: python -m pip install pyyaml
+      - name: The ontology module matches the fixture and refuses what it should
+        run: python scripts/test_ontology.py
+      # An installer runs each skill's check after installing it; this runs it the same way.
+      - name: The post-install check passes on the fixture workspace
+        run: node scripts/validate-bundle.mjs --run-checks skills/quarter-planning/tests/fixture --skills skills .

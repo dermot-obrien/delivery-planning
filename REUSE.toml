@@ -45,6 +45,8 @@ path = [
   "scripts/**",
   ".github/workflows/**",
   ".claude-plugin/**",
+  "bundle.json",
+  "ontology/**",
 ]
 precedence = "override"
 SPDX-FileCopyrightText = "2026 Dermot O'Brien"
