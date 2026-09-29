@@ -88,6 +88,15 @@ class TestPassingRun(Workspace):
         self.assertEqual(code, 0, out)
         self.assertIn('Every figure above follows from the registers', out)
 
+    def test_budget_mode_names_a_missing_budget(self):
+        self.edit(self.MODEL, '  budget_points: 29.5  # derived from the resourcing\n', '')
+        code, out = self.run_quarter('--budget')
+        self.assertEqual(code, 1, out)
+        self.assertIn('EP-001 is given 29.5 points by the distribution but records no '
+                      'budget_points', out)
+        self.assertNotIn('None', out)
+        self.assertIn('--apply', out)
+
     def test_where_notes_fiscal_default(self):
         code, out = self.run_quarter('--where')
         self.assertNotIn('fiscal-year default', out)

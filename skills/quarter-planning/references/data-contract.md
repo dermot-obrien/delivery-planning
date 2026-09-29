@@ -2,7 +2,7 @@
 
 What this skill reads, so any workspace can supply it, whether or not it uses a work-management framework. The same shapes are published as the bundle's ontology module, `ontology/delivery.schema.json`, which builds on the work layer of AI-Assisted Work. Every location comes from `[suite.quarter-planning]` in the workspace's `.agents/skill-bindings.toml`; nothing has a default path. `tests/fixture/` is a complete, minimal workspace that satisfies this contract, and is the quickest way to see every file in context.
 
-`{quarter}` in a path binding is the quarter's slug, such as `2027-q1`. `slugPattern` says how a slug is spelt, with named groups `y` and `q`, and `quarterLabel` builds the label the model records from them, such as `2027-Q1`.
+`{quarter}` in a path binding is the quarter's slug, such as `2027-q1`. `slugPattern` says how a slug is spelt, as a regular expression with named groups, and `quarterLabel` builds the label the model records from those groups. The defaults read `fy30-q1` as `Q1-FY30`; `tests/fixture/` declares `^(?P<y>\d{4})-q(?P<q>[1-4])$` and `{y}-Q{q}`, which read `2027-q1` as `2027-Q1`.
 
 ## Required
 
@@ -35,7 +35,7 @@ What this skill reads, so any workspace can supply it, whether or not it uses a 
 
 `work_plan.yaml` holds the quarterly plan under `work_plan:`: a record with `id`, `plan_type: quarterly`, `quarter`, `planned_start`, `planned_end`, `status` and `work_item_ids`, the epics and other work the quarter commits to.
 
-`activity.yaml` holds the stories under `activity:`: each with `id`, `work_item_id` (its epic), `title`, and optionally `site_route` and `request_ids`.
+`work_item.yaml` and `work_plan.yaml` must both exist. `activity.yaml` is optional, and holds the stories under `activity:`: each with `id`, `work_item_id` (its epic), `title`, and optionally `site_route` and `request_ids`.
 
 The skill edits `work_item.yaml` only through `--apply`, in place, keeping comments.
 

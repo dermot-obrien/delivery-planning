@@ -27,7 +27,9 @@ python -m unittest discover -s skills/quarter-planning/tests
 
 Keep the skills generic. They are used by many organisations, so nothing in them may name or imply one: no organisation names, internal hosts, identifiers or brand palettes in code, tests or examples. An organisation's own registers, calendar, people and plans belong in its own repository, bound through its own `.agents/skill-bindings.toml`.
 
-Record a user-visible change in `CHANGELOG.md` under the skill it changes, and raise that skill's version in its `SKILL.md` (`metadata.version`) and in its entry in `.claude-plugin/marketplace.json` together. Keep `references/data-contract.md` true to what the skill reads: a change to it is a breaking change, as listed in DD-11 of AI-Assisted Work.
+Record a user-visible change in `CHANGELOG.md` under the skill it changes, and raise that skill's version in its `SKILL.md` (`metadata.version`), in its entry in `.claude-plugin/marketplace.json`, and in its `version` and `purl` in `bundle.json`, together. Any change inside a skill's folder is a release of that skill, at least a patch; documentation under `docs/` needs no version. Keep `references/data-contract.md` true to what the skill reads: a change to it is a breaking change, as listed in DD-11 of AI-Assisted Work.
+
+Keep `docs/` in step with the scripts: a new flag goes in `docs/commands.md`, a new binding key in `docs/configuration.md` and `inputs.toml`, and a new or reworded message in `docs/troubleshooting.md`. If you change a step of `docs/quick-start.md`, run the whole guide again in a new folder, in PowerShell and in bash.
 
 `skills-ref` is the Agent Skills reference validator; the README's [Agent Skills conformance](README.md#agent-skills-conformance) section says how to install it. CI runs both, and fails a `SKILL.md` over 500 lines or about 5,000 tokens: move detail into a file under the skill and link it.
 

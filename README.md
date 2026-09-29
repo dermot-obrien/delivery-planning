@@ -14,7 +14,7 @@ Planning for other horizons, such as a sprint or a year, shares the same data mo
 
 ## Install
 
-Put `skills/quarter-planning/` wherever your agent reads skills:
+Requirements: Python 3.11 or newer, and PyYAML (`python -m pip install pyyaml`). The skill is a folder, `skills/quarter-planning/`; installing it means putting that folder where your agent reads skills.
 
 | Directory | Read by |
 |---|---|
@@ -24,32 +24,82 @@ Put `skills/quarter-planning/` wherever your agent reads skills:
 | `.claude/skills/` in the project | Claude Code, and also VS Code with GitHub Copilot and Cursor |
 | `~/.agents/skills/`, `~/.copilot/skills/`, `~/.cursor/skills/`, `~/.claude/skills/` | The same tools, for every project |
 
-With the GitHub CLI (2.90 or later), for any agent:
+A project folder (workspace level) shares the skill with everyone who clones the project and pins its version there. A folder in your home directory (user level) makes it available in every project you open.
+
+### Copy the folder
+
+Works for any agent. Clone the repository, then copy the skill into the folder your agent reads. For the workspace level, from your project's root:
+
+bash:
+
+```bash
+git clone --depth 1 https://github.com/dermot-obrien/delivery-planning.git ../delivery-planning
+mkdir -p .agents/skills
+cp -r ../delivery-planning/skills/quarter-planning .agents/skills/
+```
+
+PowerShell:
+
+```powershell
+git clone --depth 1 https://github.com/dermot-obrien/delivery-planning.git ..\delivery-planning
+New-Item -ItemType Directory -Force .agents\skills | Out-Null
+Copy-Item -Recurse ..\delivery-planning\skills\quarter-planning .agents\skills\
+```
+
+For the user level, copy it to `~/.agents/skills/` (PowerShell: `$HOME\.agents\skills\`) instead, or to the folder your agent reads from the table. To update, copy the newer folder over the old one.
+
+### With the GitHub CLI
+
+With GitHub CLI 2.90 or later, for any agent:
 
 ```bash
 gh skill install dermot-obrien/delivery-planning quarter-planning
 ```
 
-Or clone the repository and copy the skill folder. The repository is also a Claude Code plugin marketplace, with one plugin per skill:
+### As a Claude Code plugin
+
+The repository is also a Claude Code plugin marketplace, with one plugin per skill:
 
 ```
 /plugin marketplace add dermot-obrien/delivery-planning
 /plugin install quarter-planning@delivery-planning
 ```
 
-### Requirements
+### After installing
 
-Python 3.11 or newer, and PyYAML (`pip install pyyaml`).
-
-## What it reads
-
-The skill reads the workspace's planning model and registers wherever `[suite.quarter-planning]` in the workspace's `.agents/skill-bindings.toml` says they are. [`references/data-contract.md`](skills/quarter-planning/references/data-contract.md) lists every file and field, so any workspace can supply them. A work-management framework is optional: a workspace that keeps its epics in one file, written by hand or generated from a tracker, meets the contract in full. [`tests/fixture/`](skills/quarter-planning/tests/fixture) is a complete, minimal workspace to copy from.
+The skill reads the workspace's planning model and registers wherever `[suite.quarter-planning]` in the workspace's `.agents/skill-bindings.toml` says they are; nothing has a default path. [Configuration](docs/configuration.md) covers every key, and [`references/data-contract.md`](skills/quarter-planning/references/data-contract.md) every file and field. A work-management framework is optional: a workspace that keeps its epics in one file, written by hand or generated from a tracker, meets the contract in full. Then, from the workspace root:
 
 ```bash
-python <skills>/quarter-planning/bin/quarter.py --quarter <slug>
+python .agents/skills/quarter-planning/bin/check.py
 ```
 
-checks a workspace and names anything missing.
+prints `quarter-planning: ok` when the binding is complete.
+
+## Quick start
+
+With the skill copied into `.agents/skills/` and the workspace bound, as the [quick start](docs/quick-start.md) does step by step with a tiny example:
+
+```bash
+python .agents/skills/quarter-planning/bin/check.py
+python .agents/skills/quarter-planning/bin/quarter.py --quarter 2027-q1 --where
+python .agents/skills/quarter-planning/bin/quarter.py --quarter 2027-q1
+python .agents/skills/quarter-planning/bin/quarter.py --quarter 2027-q1 --budget
+```
+
+Then ask your agent, for example, "Using quarter-planning, what is the status of quarter 2027-q1?"
+
+## Documentation
+
+| Page | Covers |
+|---|---|
+| [Quick start](docs/quick-start.md) | From nothing to a validated quarter plan in about ten minutes, in bash and PowerShell |
+| [quarter-planning](docs/quarter-planning.md) | What the skill does, what it needs, and a map of its references |
+| [Concepts](docs/concepts.md) | The budget ladder, the two stages, the checks, and the optional layers, in the order you need them |
+| [Configuration](docs/configuration.md) | Every binding key, with type, default, precedence and an example; front matter and manifests |
+| [Commands](docs/commands.md) | Every script, flag and exit code, and what to ask the agent |
+| [Troubleshooting](docs/troubleshooting.md) | Every message the scripts print, and what to do |
+| [Examples](docs/examples.md) | The test workspace and what each file in it shows |
+| [References](skills/quarter-planning/references) | The rules the agent reads, inside the skill |
 
 ## Agent Skills conformance
 

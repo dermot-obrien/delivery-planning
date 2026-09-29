@@ -246,12 +246,18 @@ def budget_summary(q, by_id, plan):
         err(issue)
     for wid, derived in sorted(to_epics.items()):
         recorded = by_id[wid].get('budget_points')
-        if recorded is None or abs(f(recorded) - derived) > q.bind.tolerance:
-            err('%s records budget_points %s but the distribution gives %.1f'
-                % (wid, recorded, derived))
+        if recorded is None:
+            err('%s is given %.1f points by the distribution but records no budget_points'
+                % (wid, derived))
+        elif abs(f(recorded) - derived) > q.bind.tolerance:
+            err('%s records budget_points %.1f but the distribution gives %.1f'
+                % (wid, f(recorded), derived))
     if errors:
         for e in errors:
             print('  ERROR %s' % e)
+        if any('budget_points' in e for e in errors):
+            print('Run the validation with --apply to write the derived budget_points onto '
+                  'the epics.')
         return 1
     print('  Every figure above follows from the registers, and the basis declares the same '
           'three totals.')
@@ -381,7 +387,10 @@ def links(q, bind, check):
 
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Validate a quarter's sizing model top down, from the calendar to the "
+                    'products. With no action flag it prints the ten-section validation.',
+        epilog='Documentation: https://github.com/dermot-obrien/delivery-planning/tree/main/docs')
     ap.add_argument('--quarter', required=True,
                     help='quarter slug, e.g. fy30-q1; the form is set by slugPattern')
     ap.add_argument('--workspace', default=None,
