@@ -1,0 +1,29 @@
+delivery-planning
+Copyright 2026 Dermot O'Brien
+
+This product is licensed under CC BY 4.0 (content) and Apache-2.0 (code).
+See LICENSE and the texts in LICENSES/.
+
+Derivation
+----------
+
+skills/quarter-planning is derived from the quarter-planning skill of
+AI-Assisted Work, Copyright 2026 Dermot O'Brien, licensed under CC BY 4.0
+(content) and Apache-2.0 (code).
+
+  Source repository   https://github.com/dermot-obrien/ai-assisted-work
+  Source path         skills/quarter-planning
+  Source commit       78ec34e732ace27cc50d322d33383a75fa628092 (2026-09-29)
+  Source version      quarter-planning 3.3.0
+  Extracted           2026-09-29, first released here as quarter-planning 3.4.0
+
+scripts/validate-skills.mjs is taken from AI-Assisted Work, scripts/validate-skills.mjs,
+at commit 86fd83c1cd737a2d0d29942209c9fe2b0b226e93, with one comment changed.
+
+The history of the work before extraction is the commit history of that path
+in the source repository, and its changes are recorded in that repository's
+CHANGELOG.md. The changes made on extraction are listed under
+quarter-planning 3.4.0 in CHANGELOG.md.
+
+"AI-Assisted Work" is a trademark of Dermot O'Brien, named here only to
+identify the origin of this product.
