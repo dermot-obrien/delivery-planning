@@ -6,6 +6,20 @@ Releases of the skills in this bundle, each versioned on its own and headed with
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## quarter-planning [3.5.1] - 2026-09-30
+
+A patch release: the skill's behaviour is unchanged, and nothing it reads or writes moved. `skills-ref`, the reference validator of the [Agent Skills specification](https://agentskills.io/specification), reported the skill valid before this release, but its `SKILL.md` was 479 lines and about 6,800 body tokens, over the specification's guidance of 5,000. It is now 345 lines and about 4,400.
+
+### Changed
+
+- Detail moved out of `SKILL.md` into files it links, one level deep, each read when its topic comes up: `references/validation-report.md` (what each section of the validation answers, what fails the run, and how `--apply` patches the file), `references/check-messages.md` (every check message and what to do), `references/approval-stages.md`, `references/framing.md`, `references/links.md`, `references/work-item-folders.md`, `references/optional-bindings.md` and `references/failure-modes.md`. The text moved unchanged apart from headings and a line of introduction; `SKILL.md` keeps a summary of each, with the rules an agent must not miss.
+- `SKILL.md` said four optional keys opt in to something where its table listed six.
+
+### Added
+
+- CI runs `skills-ref validate` on each skill, pinned to a commit, and fails a `SKILL.md` over the specification's guidance of 500 lines or about 5,000 body tokens.
+- The README has an Agent Skills conformance section: what conforming means here, and how to run the same checks locally. CONTRIBUTING lists `skills-ref validate`.
+
 ## quarter-planning [3.5.0] - 2026-09-29
 
 ### Added

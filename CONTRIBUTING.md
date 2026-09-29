@@ -21,12 +21,15 @@ Run, from the repository root:
 
 ```bash
 node scripts/validate-skills.mjs skills
+skills-ref validate skills/quarter-planning
 python -m unittest discover -s skills/quarter-planning/tests
 ```
 
 Keep the skills generic. They are used by many organisations, so nothing in them may name or imply one: no organisation names, internal hosts, identifiers or brand palettes in code, tests or examples. An organisation's own registers, calendar, people and plans belong in its own repository, bound through its own `.agents/skill-bindings.toml`.
 
 Record a user-visible change in `CHANGELOG.md` under the skill it changes, and raise that skill's version in its `SKILL.md` (`metadata.version`) and in its entry in `.claude-plugin/marketplace.json` together. Keep `references/data-contract.md` true to what the skill reads: a change to it is a breaking change, as listed in DD-11 of AI-Assisted Work.
+
+`skills-ref` is the Agent Skills reference validator; the README's [Agent Skills conformance](README.md#agent-skills-conformance) section says how to install it. CI runs both, and fails a `SKILL.md` over 500 lines or about 5,000 tokens: move detail into a file under the skill and link it.
 
 ## Releases
 
