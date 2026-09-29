@@ -5,7 +5,7 @@ license: CC-BY-4.0 AND Apache-2.0. Content under CC BY 4.0, code under Apache-2.
 compatibility: Python 3.11 or newer, and PyYAML. Reads the planning registers, the model sources and the deliverable register at whatever paths [suite.quarter-planning] in the workspace .agents/skill-bindings.toml declares. Those six paths are required and have no default, so the skill carries no directory layout; it assumes no jurisdiction's holidays either.
 metadata:
   author: dermot-obrien
-  version: "3.5.0"
+  version: "3.5.1"
   homepage: https://github.com/dermot-obrien/delivery-planning
   x-skill-requires: ""
   x-derived-from: "https://github.com/dermot-obrien/ai-assisted-work/tree/78ec34e732ace27cc50d322d33383a75fa628092/skills/quarter-planning"
@@ -34,24 +34,12 @@ resolve to, and names the ones still undeclared, without reading any of them.
 | Non-working time | `calendar` | Working days per period. Public holidays and any shutdown are whatever the weekdays exceed these, so no jurisdiction is assumed |
 | Capacity | `resourcing` | Points per person, and which allocations count |
 
-Four more keys are optional, and a workspace that declares none of them validates exactly as
-before. Each one opts in to something:
-
-| Key | Opts in to |
-|---|---|
-| `ladder` | Judging each epic's framing against the definition ladder, a CSV of `rung,name,description` in ascending order |
-| `epicsDir` | Linking each generated card to the epic's own hand-written folder |
-| `cardsDir` | `--cards`, which writes the epic cards and the stage grid. May carry `{quarter}` |
-| `workItemsDir` | Reading epics from AAW work items' `progress.yaml` as well as `work_item.yaml`, and the feature requests each story cites in `request_ids` |
-| `requests` | The feature-request layer: requests against products, taken on by epics, section 10 of the validation, requests and supported products on the cards, and `--backlog`. See [references/feature-requests.md](references/feature-requests.md) |
-| `products` | Product names, platforms and teams for the requests, and checking each request's product exists |
-
-Two optional values opt in to linking the plan documents to published pages, with `--links`:
-
-| Key | Opts in to |
-|---|---|
-| `siteUrl` | The root of the published site. Each epic's and story's `site_route` is appended to it |
-| `externalRefSystem` | Letting a tracker key, the `external_id` an epic carries in `external_refs` for this system, label a link to the epic's own page |
+Optional keys each opt in to something, and a workspace that declares none of them validates
+exactly as before: `ladder` for framing against the definition ladder, `epicsDir` and
+`cardsDir` for the epic cards, `workItemsDir` for epics kept in work-item folders, `requests`
+and `products` for the feature-request layer, and `siteUrl` and `externalRefSystem` for links
+to published pages. What each turns on is in
+[references/optional-bindings.md](references/optional-bindings.md).
 
 Derived, never hand-edited: the epic cards and the stage grid, which this skill generates
 with `--cards`, the capacity-load and epic-load views under the `quarterDir` binding, any
@@ -123,43 +111,24 @@ something has moved and you need to know what disagrees.
 python <skills>/quarter-planning/bin/quarter.py --quarter <slug>
 ```
 
-One report, read top down, because that is the only direction the arithmetic runs:
-
-| Section | Answers |
-|---|---|
-| 1 Period | How many working days the quarter has once public holidays and any shutdown come out, and what a person at 100 percent is therefore worth |
-| 2 Resources | Who is on the quarter, at what allocation, less their own leave, less any dedication outside enabler work. Ends at the quarter's capacity |
-| 3 Quarter budget | How much of that capacity has been distributed, and how much is still held |
-| 4 Epic budgets | Each epic's budget derived from the distribution, against what the epic records, and who it comes from |
-| 5 Elaboration | Named products against the budget each epic was given |
-| 6 Load | Each person's owned products against the capacity they brought |
-| 7 Approval | How far the plan, each committed epic and each of its products have been approved, and what is ready for approval |
-| 8 Framing | Each committed epic's lane and flows, and whether its products evidence the rungs it commits to |
-| 9 Close | Committed against reached per flow, planned against actual per product, and a recalibration hint per type. Only once recorded |
-| 10 Feature requests | The request register's rules, and the requests each committed epic takes on: ready, scored and cited by stories. Only with `requests` bound |
-
-Sections 1 to 4 are integrity. A disagreement there means the model contradicts itself and the
-run exits non-zero, because nothing below it means anything until it is fixed. Sections 5 and
-6 are subscription: over is a scoping decision, not a defect, so they report and the run still
-passes. Positive is under, negative is over, in both. Section 5 also enforces the register
-rules, which are integrity: a product whose type is not in the register, a type the register
-does not mark used, or an explicit `points` with no `points_override_reason` fails the run.
-Section 7 is integrity again, but only for claims: an approval the records beneath it do not
-support fails the run. Section 8 fails only on a rung the ladder does not name or a movement
-down it, and warns on the rest. Warnings are printed where they arise and never fail the run.
+One report in ten sections, read top down, because that is the only direction the arithmetic
+runs: period, resources, quarter budget and epic budgets (1 to 4), elaboration and load (5 and
+6), approval, framing, the close once recorded, and feature requests when `requests` is bound.
+Sections 1 to 4 are integrity, and a disagreement there fails the run. Sections 5 and 6 are
+subscription: over is a scoping decision, not a defect, so they report and the run still
+passes, except that section 5 fails on a broken register rule. Section 7 fails on an approval
+the records beneath it do not support, section 8 on a rung the ladder does not name or a
+movement down it. Warnings never fail the run. What each section answers, and exactly what
+fails, is in [references/validation-report.md](references/validation-report.md).
 
 `--apply` writes the derived `budget_points` onto the epics when the distribution has moved
-and the recorded budgets are behind it. It takes a `.bak` first and replaces only that one
-value on that one line, or inserts the line after the record's id where the record has none.
-Any id works, not only `EP-NNN`. It patches text rather than round-tripping the YAML, which
-would drop every comment in the file. An epic read from a work item's `progress.yaml` is not
-written, because that file is versioned by its own protocol; set it there by hand. Compose
-the roadmap and regenerate the views afterwards.
+and the recorded budgets are behind it, taking a `.bak` first and keeping every comment. It
+does not write an epic read from a `progress.yaml`; set it there by hand. Compose the roadmap
+and regenerate the views afterwards. How it patches the file is in
+[references/validation-report.md](references/validation-report.md).
 
-The arithmetic lives in `src/capacity.py` and nowhere else. Anything else that needs to know
-what a person's capacity is imports it rather than recomputing, because three tools once
-derived it three ways and disagreed by a tenth of a point: small enough that nothing looked
-wrong, large enough to fail an equality check.
+The arithmetic lives in `src/capacity.py` and nowhere else. Anything that needs a person's
+capacity imports it rather than recomputing it.
 
 What has to be in place before the report means anything:
 
@@ -173,82 +142,36 @@ What has to be in place before the report means anything:
 
 ## Approval stages
 
-A plan is approved in stages, and each stage is recorded on the model record it approves, in an
-`approval` field, never in a register or a document. The same stages apply at every level:
+A plan is approved in stages, `draft`, `sized`, `validated` and `approved`, and each stage is
+recorded on the model record it approves, in an `approval` field, never in a register or a
+document. `approved` is commitment. The quarterly `WorkPlan` records it for the budget and
+resourcing, the `WorkItem` for the epic, and each entry in `deliverables` for a product.
+Section 7 fails an epic that runs ahead of its least advanced product, an `approved` epic
+under a `WorkPlan` that is not, and an epic past `draft` that names no product. When the
+resourcing or the distribution changes after the `WorkPlan` is approved, set it back to
+`validated` and approve it again.
 
-| Stage | Means |
-|---|---|
-| `draft` | Written, not yet checked. The default when the field is absent |
-| `sized` | The size is agreed: for a product its points, for an epic that its products are named and sized |
-| `validated` | Checked and ready for approval |
-| `approved` | Approved, and approval is commitment. Nothing further records commitment |
-
-Where each level records it:
-
-| Level | Record | `approved` means |
-|---|---|---|
-| Quarter budget and resourcing | The quarterly `WorkPlan` | The resourcing, and the budget derived from it, are approved. One mark covers both, because the budget is calculated from the resourcing |
-| Epic | The `WorkItem` | The epic as written is approved: goal, value, dependencies, framing. Its budget needs no mark of its own, because it follows from the approved resourcing |
-| Product | Each entry in the epic's `deliverables` | The product as defined is approved. Distinct from `state`, which tracks the product itself |
-
-Section 7 enforces three rules, each because breaking it means the model contradicts itself:
-
-- An epic is never further on than its least advanced product.
-- An epic is not `approved` until the quarter's `WorkPlan` is, because the budget it commits
-  to comes from the approved resourcing.
-- An epic past `draft` names at least one product.
-
-A workspace with different stage names declares them, least advanced first, as
-`approvalStages` in its binding. The last stage is always read as approval and commitment.
-
-When the resourcing or the distribution changes after the `WorkPlan` is approved, set it back
-to `validated` and approve it again. The report flags an approved plan whose sections 1 to 4
-no longer agree, but it cannot see a change that leaves them agreeing, so this one is a
-discipline, not a check.
+Read [references/approval-stages.md](references/approval-stages.md) before `approve`: what
+each stage means at each level, the rules section 7 enforces, and `approvalStages` for a
+workspace with its own stage names.
 
 ## The definition ladder and framing
 
-The unit of progress is a rung on the workspace's definition ladder. Each rung names the
-artefact that proves it, so a rung is a claim that can be checked rather than a statement of
-effort. Bind the ladder as `ladder`, a CSV with the columns `rung`, `name` and `description`,
-one row per rung, least defined first. The skill ships no ladder, because which rungs a
-workspace recognises is its own method.
-
-Framing lives on the epic record in the model:
-
-| Field | Holds |
-|---|---|
-| `lane` | The capability area the epic advances. One per epic |
-| `flows` | One entry per flow: `flow`, an optional `description`, `rung_from` and `rung_to` |
-| `advances_criterion_ids` | The criteria the epic advances. Empty is reported, not failed |
-| `home` | The epic's own folder, by name, under `epicsDir` |
-
-The register's optional `rung` column says which rung each product type evidences. Section 8
-joins the two:
-
-| With `ladder` bound | Result |
-|---|---|
-| A `rung_from` or `rung_to` the ladder does not name | Fails the run |
-| `rung_to` below `rung_from` | Fails the run |
-| A target rung that no product's type evidences | Warning |
-| No `lane` | Warning |
-
-With no ladder bound, section 8 lists the flows as recorded and judges nothing.
+The unit of progress is a rung on the workspace's definition ladder, bound as `ladder`: a CSV
+of `rung`, `name` and `description`, least defined first. The skill ships no ladder. Framing
+lives on the epic record as `lane`, `flows` (each with `rung_from` and `rung_to`),
+`advances_criterion_ids` and `home`, and section 8 joins it to the register's `rung` column.
+The fields, and what fails the run and what only warns, are in
+[references/framing.md](references/framing.md).
 
 ## Epic folder and epic card
 
-An epic has two faces, kept apart on purpose.
-
-| | Epic folder | Epic card |
-|---|---|---|
-| Where | `<epicsDir>/<home>/` | `<cardsDir>/<id>.md` |
-| Written by | Hand | `--cards`, from the model |
-| Lifetime | The epic's whole life, across quarters | One quarter |
-| Holds | Framing, scope decisions, dependencies, what was left out, and discovery | The rung movement, the deliverables with their types, rungs, points, states and approvals, budget against planned, and with the request layer the feature requests taken on and the products and platforms they support |
-
-The folder is where the epic is driven from and where its thinking accumulates. The card is a
-view: every figure about the epic and no prose that was not generated, so it cannot drift from
-the model. Never edit a card. Change the model or the folder, then regenerate.
+An epic has two faces, kept apart on purpose. Its folder, `<epicsDir>/<home>/`, is written by
+hand, lives for the epic's whole life, and holds the framing, scope decisions, dependencies,
+what was left out and discovery. Its card, `<cardsDir>/<id>.md`, is generated by `--cards`
+for one quarter and holds every figure about the epic and no prose that was not generated,
+so it cannot drift from the model. Never edit a card. Change the model or the folder, then
+regenerate.
 
 ```bash
 python <skills>/quarter-planning/bin/quarter.py --quarter <slug> --cards
@@ -280,58 +203,29 @@ register contracts, the checks and the card sections are in
 
 ## Links to epic and story pages
 
-A plan document, or a deck built from one, is for discussion; the page each epic and story has
-on the published site is where a reader goes for the detail and everything linked from it. So
-the documents link every epic and story to its page, and a PDF of the deck keeps those links.
-
-Where a record is published is data in the model, not configuration. The epic in
-`work_item.yaml` (or its `progress.yaml`) and the story in `activity.yaml` each carry
-`site_route`, the route of its own page relative to the site root. The workspace binds one
-value, `siteUrl`, so moving from a local preview to the published site is one change and a
-rerun. Keep routes stable, with no quarter or grouping in them, so a link in a PDF already
-circulated survives a story moving quarter. The workspace's page generator publishes each page
-at the route its record names; this skill only reads the routes.
-
-A document names an epic or a story with a Markdown reference link and keeps the definition
-at its foot:
-
-```markdown
-The quarter commits to [the example increment][EP-001], starting with [the capability area][EP-001-A1].
-
-[EP-001]: https://site.example/epics/EP-001/
-[EP-001-A1]: https://site.example/stories/EP-001-A1/
-```
+The plan documents link every epic and story to its page on the published site, as Markdown
+reference links whose definitions sit at each document's foot. Each record carries its own
+`site_route`, and the workspace binds `siteUrl`.
 
 ```bash
 python <skills>/quarter-planning/bin/quarter.py --quarter <slug> --links
 python <skills>/quarter-planning/bin/quarter.py --quarter <slug> --links --check
 ```
 
-The first rewrites every definition in the quarter folder's Markdown whose label is an epic
-id, a story id or, with `externalRefSystem` bound, an epic's tracker key, and leaves the prose
-and every other definition alone. A record with no `site_route` is reported and its definition
-left as it is. The second writes nothing and exits non-zero if any definition is behind the
-model. A generator that writes links itself, a stories page or a schedule, imports
-`src/links.py` so it resolves routes the same way.
+The first rewrites only the definitions whose label is an epic id, a story id or, with
+`externalRefSystem` bound, an epic's tracker key. The second writes nothing and exits
+non-zero if any definition is behind the model. The link form, where routes come from and
+how other generators resolve them the same way are in
+[references/links.md](references/links.md).
 
 ## Epics from work-item folders
 
-A workspace that manages work as one folder per work item, as AI-Assisted Work does, keeps an
-epic in `<work items>/WI-NNN/progress.yaml` rather than in the composed `work_item.yaml`. Bind `workItemsDir` and the skill reads both: every `progress.yaml`
-with `work_item_level: epic` and a `planning_period` equal to the quarter's label becomes an
-epic record.
-
-| progress.yaml | Read as |
-|---|---|
-| `work_item_id` | `id` |
-| `title`, `budget_points`, `planned_points`, `lane`, `flows`, `home`, `approval` | The same |
-| Deliverable `type` | `deliverable_id` |
-| Deliverable `owner` | `owner_stakeholder_id` |
-| Deliverable `id`, `name`, `points`, `points_override_reason`, `state`, `approval`, `actual_points` | The same |
-
-Where both stores hold the same id, `work_item.yaml` wins and the clash is a warning. A work
-item's epic still needs the quarter's WorkPlan to name it, and a row in the resourcing
-register to give it a budget.
+A workspace that keeps an epic in `<work items>/WI-NNN/progress.yaml`, one folder per work
+item, binds `workItemsDir`, and the skill reads each `progress.yaml` with
+`work_item_level: epic` and the quarter's `planning_period` as an epic, beside
+`work_item.yaml`. Where both hold the same id, `work_item.yaml` wins and the clash is a
+warning. The field mapping is in
+[references/work-item-folders.md](references/work-item-folders.md).
 
 ## Close the quarter
 
@@ -371,7 +265,8 @@ order:
 5. The products that make it true, from the register.
 
 Record 1 to 3 on the epic's model record, as `lane`, `advances_criterion_ids` and `flows`,
-so section 8 can check them. Write 4, and the reasoning behind all of it, in the epic's own
+so section 8 can check them as [references/framing.md](references/framing.md) describes.
+Write 4, and the reasoning behind all of it, in the epic's own
 folder under `epicsDir`, following the outline in
 [references/epic-cards.md](references/epic-cards.md). The card then carries the figures and
 the folder carries the argument.
@@ -412,55 +307,20 @@ and the reserve is gone" is a claim, not a figure.
 
 ## Interpreting the check
 
-| Message | What it means | What to do |
-|---|---|---|
-| `X records planned_points N but its deliverables sum to M` | The epic record disagrees with its own products | Set `planned_points` to the sum, or fix the products |
-| `X is loaded to N against M of capacity` | Over-subscription | Not a tooling fix. Cut scope, or record the decision not to |
-| `X names deliverables worth N but has no budget_points` | Stage 1 has not been done for that epic | Allocate a budget, or confirm it is deferred |
-| `deliverable X is declared on Y but its id does not belong to it` | Structural break in `work_item.yaml`: a block has been cut across a record boundary | Repair from `roadmap.yaml`, which holds the composed copy |
-| `overrides its type sizing with N points but records no reason` | `points` set without `points_override_reason` | Add the reason |
-| `D on X is typed T, which is not in the register` | A product typed outside the register | Pick a type the register holds. Never invent an id |
-| `D on X is typed T, which the register marks used No` | A retired type | Retype the product from a type in use |
-| `D on X names no type from the register` | A product with no `deliverable_id` | Type it |
-| `X flow F records rung_to R, which the ladder does not name` | A rung outside the bound ladder | Fix the rung, or the ladder |
-| `X flow F moves down the ladder, from A to B` | A movement that loses definition | Fix the rungs. A rung lost is recorded at close, not planned |
-| `WARNING X commits a flow to R but names no product whose type evidences R` | Nothing planned would show the rung was reached | Name a product of a type that evidences R, or lower the commitment |
-| `WARNING X records no lane` | The capability area is unstated | Set `lane` |
-| `WARNING X is recorded in both work_item.yaml and ...` | Two records for one epic | Remove one. `work_item.yaml` is used meanwhile |
-| `Stale epic cards for Q` | A card no longer matches the model | Run `--cards` and commit the result |
-| `Links behind the model for Q` | A definition does not point at its record's page | Run `--links` |
-| `WARNING X is linked but has no site_route` | The record does not say where it is published | Set `site_route` on the record |
-| `<file>.csv has X; the model gives Y` | A derived view is stale | `commands.regenerate` |
-| `<file>.md says X; the derived view has Y` | Prose has drifted from the model | Fix the prose, never the view |
-| `activity X is assigned but has no estimate` | Warning. Sizing lives on products, not activities | Usually nothing |
-| `X is recorded S but its product Y is only T` | An epic's approval runs ahead of one of its products | Bring the product up, or the epic back |
-| `X is recorded approved, which is commitment, but the quarter budget and resourcing are S` | An epic committed before the budget it commits to | Approve the WorkPlan first, or set the epic back |
-| `X records approval V, which is not one of ...` | A stage the workspace has not declared | Fix the value, or declare the stage in `approvalStages` |
-| `The quarter budget is recorded approved, but levels 1 to 4 no longer agree` | What was approved has moved | Fix sections 1 to 4, then approve again |
+Every message the validation and the workspace's checks print, what it means and what to do,
+is in [references/check-messages.md](references/check-messages.md). Read it before acting on
+a failure. Two rules cover most of it: over-subscription is a scoping decision, never a
+tooling fix, and prose that disagrees with a derived view is fixed in the prose, never the
+view.
 
 ## Failure modes, learned the hard way
 
-Never edit `work_item.yaml` by text range. A block delete that runs past a record boundary
-silently removes whole work items and orphans their deliverables onto a neighbour. Parse,
-edit the structure, serialise. If it happens, `roadmap.yaml` holds the composed copy of every
-record, including working-tree edits, and is the recovery source.
-
-Back up the derived views before regenerating. They are untracked, so git cannot restore
-them, and a regeneration from a half-migrated model writes zeros over figures that came from
-a state which no longer exists.
-
-Null is not zero. A deliverable with no `points` takes its type's base points. An activity
-with no `estimate_points` is unsized, not free. Two tools that disagree about this will
-compute the same quantity differently and neither will look wrong.
-
-Never write a Unicode minus into a table the checker prints. Windows cannot encode it and the
-run dies partway, which makes the error count look smaller than it is. Use an ASCII hyphen.
-
-If a view cannot be derived from the model, retire it rather than hand-maintaining it. Hand
-figures rot silently and are believed for exactly as long as nobody checks.
-
-Prefer deriving a label over hardcoding it. A hardcoded epic label hid a name drift for weeks;
-deriving it from the model's title and Jira reference surfaced it immediately.
+Never edit `work_item.yaml` by text range: parse, edit the structure, serialise. A block
+delete that runs past a record boundary silently removes whole work items, and `roadmap.yaml`
+holds the composed copy to recover from. Back up the derived views before regenerating,
+because they are untracked. Null is not zero: a deliverable with no `points` takes its type's
+base points. These and the rest, with why each matters, are in
+[references/failure-modes.md](references/failure-modes.md).
 
 ## What this skill does not do
 
@@ -473,7 +333,14 @@ figure is wrong, fix the script that derives it.
 
 - The workspace's planning playbook, at the `playbook` binding, which governs the method
 - The deliverable register, at the `register` binding: product types, sizes, and the used-only rule
-- [references/budget-model.md](references/budget-model.md), the chain from calendar to epic budget
-- [references/epic-cards.md](references/epic-cards.md), what a card holds and how an epic folder is laid out
-- [references/data-contract.md](references/data-contract.md), every file and field this skill reads, so any workspace can supply them
+- References, each read when its topic comes up: [budget-model.md](references/budget-model.md),
+  [validation-report.md](references/validation-report.md),
+  [check-messages.md](references/check-messages.md),
+  [approval-stages.md](references/approval-stages.md), [framing.md](references/framing.md),
+  [epic-cards.md](references/epic-cards.md), [links.md](references/links.md),
+  [feature-requests.md](references/feature-requests.md),
+  [work-item-folders.md](references/work-item-folders.md),
+  [optional-bindings.md](references/optional-bindings.md),
+  [data-contract.md](references/data-contract.md) and
+  [failure-modes.md](references/failure-modes.md)
 - `aaw-start-work`, from AI-Assisted Work, for opening a work item where a workspace uses it; this skill plans the quarter those work items sit in

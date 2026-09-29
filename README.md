@@ -51,6 +51,20 @@ python <skills>/quarter-planning/bin/quarter.py --quarter <slug>
 
 checks a workspace and names anything missing.
 
+## Agent Skills conformance
+
+`quarter-planning` conforms to the [Agent Skills specification](https://agentskills.io/specification). Its `SKILL.md` carries only the fields the specification defines, its `name` is the name of the directory it is installed into (`skills/quarter-planning` here, and `quarter-planning` under whichever skills directory an installer uses), every `metadata` value is a string, and the file stays within the specification's guidance of 500 lines and 5,000 tokens, with detail in files it links by a relative path one level deep. The `x-` keys in `metadata` are this project's own, which the specification allows.
+
+CI checks this on every pull request and every push to `main`, with `skills-ref`, the specification's reference validator, beside this repository's own `scripts/validate-skills.mjs`, which also checks that relative links resolve. To run the same checks locally, from the repository root:
+
+```bash
+python -m pip install "git+https://github.com/agentskills/agentskills@69ef37e9424c0a7ea9dd2293b559e43ec8176379#subdirectory=skills-ref"
+skills-ref validate skills/quarter-planning
+node scripts/validate-skills.mjs skills
+```
+
+On Windows, set `PYTHONUTF8=1` before running `skills-ref`, which otherwise reads `SKILL.md` in the system's code page.
+
 ## Versions and identifiers
 
 Each skill has its own Semantic Version in its `SKILL.md` (`metadata.version`), and each release is tagged `<skill>--v<version>`, such as `quarter-planning--v3.4.0`. A skill is identified by a Package URL of the `generic` type, `pkg:generic/dermot-obrien/delivery-planning/<skill>`, which names no host, so a mirror or a move changes where it is fetched from but not what it is called. This follows DD-11 of [AI-Assisted Work](https://github.com/dermot-obrien/ai-assisted-work/blob/main/docs/about/design-decisions.md).
