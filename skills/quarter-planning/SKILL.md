@@ -5,7 +5,7 @@ license: CC-BY-4.0 AND Apache-2.0. Content under CC BY 4.0, code under Apache-2.
 compatibility: Python 3.11 or newer, and PyYAML. Reads the planning registers, the model sources and the deliverable register at whatever paths [suite.quarter-planning] in the workspace .agents/skill-bindings.toml declares. Those six paths are required and have no default, so the skill carries no directory layout; it assumes no jurisdiction's holidays either.
 metadata:
   author: dermot-obrien
-  version: "3.4.0"
+  version: "3.5.0"
   homepage: https://github.com/dermot-obrien/delivery-planning
   x-skill-requires: ""
   x-derived-from: "https://github.com/dermot-obrien/ai-assisted-work/tree/78ec34e732ace27cc50d322d33383a75fa628092/skills/quarter-planning"
@@ -105,7 +105,9 @@ python <skills>/quarter-planning/bin/quarter.py --quarter <slug> --budget
 
 A workspace usually wraps that in a script of its own, so the command people type is short.
 `--where` prints the inputs the binding resolves to, and reads none of them, which is the
-first thing to run when a figure comes from a file you did not expect.
+first thing to run when a figure comes from a file you did not expect. `python bin/check.py`,
+run from the workspace root, is the post-install check: it confirms the binding declares the
+six required paths and that every declared path resolves, without naming a quarter.
 
 One question answered: what may this quarter spend, and which input produced each step of that
 figure. Every line names its source, so a figure that looks wrong is argued with at the step

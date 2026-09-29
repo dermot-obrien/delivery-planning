@@ -1,0 +1,35 @@
+{
+  "$schema": "pkg:generic/dermot-obrien/ai-assisted-work/bundle-schema@1.0.0",
+  "name": "delivery-planning",
+  "owner": "dermot-obrien",
+  "description": "Delivery planning skills and the delivery layer of the ontology: epics and stories on the work layer, capacity and resourcing, deliverable types, products and feature requests.",
+  "license": "CC-BY-4.0 AND Apache-2.0",
+  "homepage": "https://github.com/dermot-obrien/delivery-planning",
+  "derived_from": [
+    "https://github.com/dermot-obrien/ai-assisted-work/tree/78ec34e732ace27cc50d322d33383a75fa628092/skills/quarter-planning"
+  ],
+  "skills": [
+    {
+      "name": "quarter-planning",
+      "path": "skills/quarter-planning",
+      "version": "3.5.0",
+      "purl": "pkg:generic/dermot-obrien/delivery-planning/quarter-planning@3.5.0",
+      "requires": [],
+      "check": {
+        "command": ["python", "bin/check.py"],
+        "runtime": "python",
+        "description": "Python 3.11+, PyYAML, and [suite.quarter-planning] declaring the six required paths, each resolving"
+      }
+    }
+  ],
+  "ontology": {
+    "id": "pkg:generic/dermot-obrien/delivery-planning/delivery-ontology@1.0.0",
+    "path": "ontology/delivery.schema.json",
+    "extends": [
+      { "purl": "pkg:generic/dermot-obrien/ai-assisted-work/work-ontology", "range": "^1.0.0" }
+    ]
+  },
+  "adapters": {
+    "claude-plugin": ".claude-plugin/marketplace.json"
+  }
+}

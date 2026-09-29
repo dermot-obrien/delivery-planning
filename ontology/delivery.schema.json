@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pkg:generic/dermot-obrien/delivery-planning/delivery-ontology@1.0.0",
+  "title": "Delivery ontology",
+  "description": "The delivery layer of the layered ontology in DD-11 of AI-Assisted Work: epics and stories as profiles of the work layer's WorkItem and Activity, the typed and sized deliverable, the quarterly work plan, capacity and resourcing, deliverable types, products and feature requests, as the quarter-planning skill reads them (skills/quarter-planning/references/data-contract.md). It builds on the work layer, pkg:generic/dermot-obrien/ai-assisted-work/work-ontology, by $ref and allOf and redefines nothing in it. A product, registered so consumers can use it and raise feature requests against it, belongs here; what a work item produces is the work layer's Deliverable. Rows of a CSV register are described with every value as it may be read: text, or a number where the column is numeric.",
+  "$comment": "Additive: the programme, milestone, gate, commitment and slip types DD-11 places in this layer are still defined in AI-Assisted Architecture's base ontology, and move here with its next major version.",
+  "$defs": {
+    "Approval": {
+      "description": "An approval stage. The stages are the workspace's approvalStages, least advanced first; the default is draft, sized, validated, approved, and the last is commitment.",
+      "type": "string",
+      "minLength": 1
+    },
+    "Rung": {
+      "description": "A rung on the workspace's definition ladder, such as R2.",
+      "type": "string",
+      "minLength": 1
+    },
+    "Points": {
+      "description": "Story points, unrounded.",
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "NumberLike": {
+      "description": "A number, or its text as a CSV cell holds it.",
+      "anyOf": [
+        { "type": "number" },
+        { "type": "string", "pattern": "^-?[0-9]+(\\.[0-9]+)?$" }
+      ]
+    },
+    "Flow": {
+      "description": "The rung movement an epic commits to for one flow of its lane.",
+      "type": "object",
+      "required": ["flow", "rung_from", "rung_to"],
+      "properties": {
+        "flow": { "type": "string", "minLength": 1 },
+        "description": { "type": ["string", "null"] },
+        "rung_from": { "$ref": "#/$defs/Rung" },
+        "rung_to": { "$ref": "#/$defs/Rung" },
+        "rung_reached": { "anyOf": [{ "$ref": "#/$defs/Rung" }, { "type": "null" }] }
+      }
+    },
+    "EpicPlanning": {
+      "description": "The planning fields an epic carries, whichever store holds it.",
+      "type": "object",
+      "properties": {
+        "budget_points": {
+          "description": "Capacity the epic may spend, derived from the quarter's resourcing. Set by planning, never estimated.",
+          "$ref": "#/$defs/Points"
+        },
+        "planned_points": {
+          "description": "The sum of its deliverables' sizes. Compared with the budget, never reconciled to it.",
+          "$ref": "#/$defs/Points"
+        },
+        "lane": {
+          "description": "The capability area the epic advances. One per epic.",
+          "type": ["string", "null"]
+        },
+        "flows": { "type": "array", "items": { "$ref": "#/$defs/Flow" } },
+        "home": {
+          "description": "The epic's hand-written folder, by name, under the epicsDir binding.",
+          "type": ["string", "null"]
+        },
+        "site_route": {
+          "description": "The route of the epic's own page on the published site, relative to its root.",
+          "type": ["string", "null"]
+        },
+        "approval": { "$ref": "#/$defs/Approval" },
+        "external_refs": {
+          "type": "array",
+          "items": { "$ref": "pkg:generic/dermot-obrien/ai-assisted-work/work-ontology#/$defs/ExternalReference" }
+        }
+      }
+    },
+    "SizedDeliverable": {
+      "description": "A work item's deliverable, typed from the deliverable register and sized in points. Extends the work layer's Deliverable.",
+      "allOf": [
+        { "$ref": "pkg:generic/dermot-obrien/ai-assisted-work/work-ontology#/$defs/Deliverable" },
+        {
+          "type": "object",
+          "properties": {
+            "points": {
+              "description": "Overrides the type's base points. Omitted means the register's base_story_points.",
+              "$ref": "#/$defs/Points"
+            },
+            "points_override_reason": { "type": ["string", "null"] },
+            "actual_points": {
+              "description": "What it took, recorded at quarter close to recalibrate the register.",
+              "$ref": "#/$defs/Points"
+            },
+            "approval": { "$ref": "#/$defs/Approval" }
+          }
+        }
+      ]
+    },
+    "Epic": {
+      "description": "An epic in a work-item folder's progress.yaml: a WorkItem whose work_item_level is epic, with the planning fields added. planning_period is the quarter's label.",
+      "allOf": [
+        { "$ref": "pkg:generic/dermot-obrien/ai-assisted-work/work-ontology#/$defs/WorkItem" },
+        { "$ref": "#/$defs/EpicPlanning" },
+        {
+          "type": "object",
+          "required": ["work_item_level"],
+          "properties": {
+            "work_item_level": { "const": "epic" },
+            "deliverables": { "type": "array", "items": { "$ref": "#/$defs/SizedDeliverable" } },
+            "activities": { "type": "array", "items": { "$ref": "#/$defs/Story" } }
+          }
+        }
+      ]
+    },
+    "Story": {
+      "description": "A story: an Activity of an epic, with the route of its page and the feature requests it builds part of.",
+      "allOf": [
+        { "$ref": "pkg:generic/dermot-obrien/ai-assisted-work/work-ontology#/$defs/Activity" },
+        { "$ref": "#/$defs/StoryFields" }
+      ]
+    },
+    "StoryFields": {
+      "type": "object",
+      "properties": {
+        "site_route": { "type": ["string", "null"] },
+        "request_ids": {
+          "description": "The feature requests this story builds part of. A request is assigned to its epic in the request register; stories cite it here, separately.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "RegisteredDeliverable": {
+      "description": "A deliverable of an epic record in work_item.yaml: the work layer's Deliverable, typed by deliverable_id and owned by a stakeholder.",
+      "allOf": [
+        { "$ref": "#/$defs/SizedDeliverable" },
+        {
+          "type": "object",
+          "required": ["deliverable_id"],
+          "properties": {
+            "deliverable_id": {
+              "description": "The deliverable type, an id in the deliverable register.",
+              "type": "string",
+              "minLength": 1
+            },
+            "owner_stakeholder_id": { "type": ["string", "null"] }
+          }
+        }
+      ]
+    },
+    "EpicRecord": {
+      "description": "An epic as the planning model's work_item.yaml holds it, under the top-level work_item list. Where the same epic is also a work-item folder, this record wins.",
+      "allOf": [
+        { "$ref": "#/$defs/EpicPlanning" },
+        {
+          "type": "object",
+          "required": ["id", "title", "quarter"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "title": { "type": "string", "minLength": 1 },
+            "quarter": {
+              "description": "The quarter label it is planned in, as quarterLabel builds it.",
+              "type": "string",
+              "minLength": 1
+            },
+            "deliverables": { "type": "array", "items": { "$ref": "#/$defs/RegisteredDeliverable" } }
+          }
+        }
+      ]
+    },
+    "StoryRecord": {
+      "description": "A story as the planning model's activity.yaml holds it, under the top-level activity list.",
+      "allOf": [
+        { "$ref": "#/$defs/StoryFields" },
+        {
+          "type": "object",
+          "required": ["id", "work_item_id", "title"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "work_item_id": { "type": "string", "minLength": 1 },
+            "title": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "WorkPlan": {
+      "description": "A plan committing a period's work, under work_plan.yaml's top-level work_plan list.",
+      "type": "object",
+      "required": ["id", "plan_type", "quarter", "work_item_ids"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": ["string", "null"] },
+        "plan_type": { "type": "string", "examples": ["quarterly"] },
+        "quarter": { "type": "string", "minLength": 1 },
+        "planned_start": { "type": ["string", "null"] },
+        "planned_end": { "type": ["string", "null"] },
+        "status": { "type": ["string", "null"] },
+        "owner": { "type": ["string", "null"] },
+        "approval": { "$ref": "#/$defs/Approval" },
+        "work_item_ids": {
+          "description": "The epics and other work the plan commits to.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "WorkItemFile": {
+      "description": "work_item.yaml.",
+      "type": "object",
+      "required": ["work_item"],
+      "properties": { "work_item": { "type": "array", "items": { "$ref": "#/$defs/EpicRecord" } } }
+    },
+    "ActivityFile": {
+      "description": "activity.yaml.",
+      "type": "object",
+      "required": ["activity"],
+      "properties": { "activity": { "type": "array", "items": { "$ref": "#/$defs/StoryRecord" } } }
+    },
+    "WorkPlanFile": {
+      "description": "work_plan.yaml.",
+      "type": "object",
+      "required": ["work_plan"],
+      "properties": { "work_plan": { "type": "array", "items": { "$ref": "#/$defs/WorkPlan" } } }
+    },
+    "DeliverableType": {
+      "description": "A row of the deliverable register: a kind of product an epic can name, with its base size.",
+      "type": "object",
+      "required": ["id", "name", "base_story_points"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "rung": { "description": "The rung this type evidences, where a ladder is bound.", "type": ["string", "null"] },
+        "base_story_points": { "$ref": "#/$defs/NumberLike" },
+        "used": { "type": ["string", "boolean", "null"] },
+        "description": { "type": ["string", "null"] }
+      }
+    },
+    "Product": {
+      "description": "A row of the product register: something registered so consumers can use it and raise feature requests against it, offered by a platform and owned by a team.",
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "platform": { "type": ["string", "null"] },
+        "team": { "type": ["string", "null"] },
+        "owner": { "description": "Read where there is no team.", "type": ["string", "null"] }
+      }
+    },
+    "WsjfFactor": {
+      "description": "A WSJF factor on the scale 1, 2, 3, 5, 8, 13, 20, or empty where not yet scored.",
+      "enum": [1, 2, 3, 5, 8, 13, 20, "1", "2", "3", "5", "8", "13", "20", "", null]
+    },
+    "FeatureRequest": {
+      "description": "A row of the feature-request register: a request raised against one product, ranked by WSJF, and taken on by at most one epic.",
+      "type": "object",
+      "required": ["id", "title", "product", "status"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "product": { "description": "The product's id in the product register.", "type": "string", "minLength": 1 },
+        "epic": { "description": "The epic taking it on, empty until one does.", "type": ["string", "null"] },
+        "status": {
+          "description": "One of the workspace's requestStatuses; the default is analyzing, backlog, implementing, validating, releasing, done, rejected.",
+          "type": "string",
+          "minLength": 1
+        },
+        "requested_by": { "type": ["string", "null"] },
+        "value": { "$ref": "#/$defs/WsjfFactor" },
+        "time_criticality": { "$ref": "#/$defs/WsjfFactor" },
+        "risk_reduction": { "$ref": "#/$defs/WsjfFactor" },
+        "job_size": { "$ref": "#/$defs/WsjfFactor" }
+      }
+    },
+    "CalendarPeriod": {
+      "description": "A row of the quarter's calendar.",
+      "type": "object",
+      "required": ["period_id", "start", "end", "working_days"],
+      "properties": {
+        "period_id": { "type": "string", "minLength": 1 },
+        "type": { "type": ["string", "null"] },
+        "start": { "type": "string" },
+        "end": { "type": "string" },
+        "working_days": { "$ref": "#/$defs/NumberLike" },
+        "note": { "type": ["string", "null"] }
+      }
+    },
+    "PlanningAssumption": {
+      "description": "A row of the planning basis: one assumption, its value and the reasoning behind it.",
+      "type": "object",
+      "required": ["parameter", "value"],
+      "properties": {
+        "parameter": { "type": "string", "minLength": 1 },
+        "value": { "$ref": "#/$defs/NumberLike" },
+        "unit": { "type": ["string", "null"] },
+        "basis": { "type": ["string", "null"] }
+      }
+    },
+    "Allocation": {
+      "description": "A row of the resourcing register: one person's share of their allocation given to one piece of work.",
+      "type": "object",
+      "required": ["stakeholder_id", "work_item_id", "share_of_allocation_pct"],
+      "properties": {
+        "stakeholder_id": { "type": "string", "minLength": 1 },
+        "name": { "type": ["string", "null"] },
+        "role": { "type": ["string", "null"] },
+        "allocation_pct": { "$ref": "#/$defs/NumberLike" },
+        "gross_capacity_points": { "$ref": "#/$defs/NumberLike" },
+        "leave_working_days": { "$ref": "#/$defs/NumberLike" },
+        "adjustment_points": { "$ref": "#/$defs/NumberLike" },
+        "capacity_points": { "$ref": "#/$defs/NumberLike" },
+        "work_item_id": { "type": "string", "minLength": 1 },
+        "share_of_allocation_pct": { "$ref": "#/$defs/NumberLike" },
+        "counts_against_enabler_capacity": { "type": ["string", "boolean", "null"] },
+        "adjustment_reason": { "type": ["string", "null"] }
+      }
+    },
+    "LadderRung": {
+      "description": "A row of the definition ladder, least defined first.",
+      "type": "object",
+      "required": ["rung", "name"],
+      "properties": {
+        "rung": { "$ref": "#/$defs/Rung" },
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
