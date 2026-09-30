@@ -70,7 +70,6 @@ budgets are behind it.
 with --check writes nothing and fails if any is stale. Everything else is read only.
 """
 import argparse
-import glob
 import io
 import os
 import re
@@ -324,6 +323,20 @@ def display_path(p):
     return os.path.relpath(p, os.getcwd()) if same else p
 
 
+# Folders under the quarter folder that hold no plan documents: build output, dependencies,
+# and hidden or underscore folders, which by convention are archives and partials.
+SKIP_DIRS = {'dist', 'build', 'node_modules'}
+
+
+def quarter_documents(qdir):
+    """Every Markdown document under the quarter folder, subfolders included, in a stable order."""
+    found = []
+    for root, dirs, files in os.walk(qdir):
+        dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not d.startswith(('.', '_')))
+        found.extend(os.path.join(root, f) for f in files if f.endswith('.md'))
+    return sorted(found)
+
+
 def cards(q, bind, check):
     """Write the epic cards and the stage grid, or with check, report which are stale."""
     if not bind.declared('cardsDir'):
@@ -358,7 +371,7 @@ def links(q, bind, check):
     resolver = links_mod.Links(bind, items)
     qdir = bind.resolve('quarterDir')
     stale = []
-    for path in sorted(glob.glob(os.path.join(qdir, '*.md'))):
+    for path in quarter_documents(qdir):
         with io.open(path, encoding='utf-8') as fh:
             have = fh.read()
         want = links_mod.rewrite(have, resolver)

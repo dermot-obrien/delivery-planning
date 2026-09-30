@@ -38,7 +38,7 @@ python <skills>/quarter-planning/bin/quarter.py --quarter QUARTER [--workspace W
 | `--budget` | print only the top-level budget and the ladder it comes down | Read only |
 | `--apply` | write the derived budget_points onto the epics in work_item.yaml | Runs the validation, then patches `work_item.yaml` in place after copying it to `work_item.yaml.bak`. Keeps comments. Does not write epics read from a `progress.yaml` |
 | `--cards` | write the epic cards and the stage grid to the cardsDir binding | Needs `cardsDir` |
-| `--links` | point the epic and story links in the quarter folder documents at each record page: siteUrl plus the record site_route | Needs `siteUrl`. Rewrites the `*.md` files directly in `quarterDir` |
+| `--links` | point the epic and story links in the quarter folder documents at each record page: siteUrl plus the record site_route | Needs `siteUrl`. Rewrites the `*.md` files under `quarterDir`, subfolders included, except hidden and `_` folders, `dist`, `build` and `node_modules` |
 | `--check` | with --cards or --links, write nothing and exit non-zero if stale | Only with `--cards` or `--links` |
 | `--backlog` | print each product's feature requests ranked by WSJF, with their epic and stories, and stop. Needs the requests binding | Reads nothing about capacity |
 

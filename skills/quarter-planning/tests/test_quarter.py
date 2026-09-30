@@ -44,6 +44,7 @@ class Workspace(unittest.TestCase):
             return fh.read()
 
     def write(self, rel, text):
+        os.makedirs(os.path.dirname(self.path(rel)), exist_ok=True)
         with open(self.path(rel), 'w', encoding='utf-8', newline='\n') as fh:
             fh.write(text)
 
@@ -526,6 +527,28 @@ class TestLinks(Workspace):
         self.run_quarter('--links')
         self.assertIn('[WI-002]: http://localhost:3000/docs/epics/WI-002/\n',
                       self.read(self.PLAN))
+
+    def test_documents_in_subfolders_are_linked(self):
+        self.write('planning/2027-q1/epics/brief.md', 'See [the epic][EP-001].\n\n[EP-001]: TODO\n')
+        code, out = self.run_quarter('--links')
+        self.assertEqual(code, 0, out)
+        self.assertIn('[EP-001]: http://localhost:3000/docs/epics/EP-001/\n',
+                      self.read('planning/2027-q1/epics/brief.md'))
+        self.assertIn('brief.md', out)
+
+    def test_check_reports_a_stale_subfolder_document(self):
+        self.run_quarter('--links')
+        self.write('planning/2027-q1/epics/brief.md', '[EP-001]: TODO\n')
+        code, out = self.run_quarter('--links', '--check')
+        self.assertEqual(code, 1, out)
+        self.assertIn('brief.md', out)
+
+    def test_archives_and_build_output_are_left_alone(self):
+        for folder in ('_archive', '.hidden', 'dist', 'node_modules'):
+            self.write('planning/2027-q1/%s/old.md' % folder, '[EP-001]: TODO\n')
+        self.run_quarter('--links')
+        for folder in ('_archive', '.hidden', 'dist', 'node_modules'):
+            self.assertEqual('[EP-001]: TODO\n', self.read('planning/2027-q1/%s/old.md' % folder))
 
     def test_needs_a_site(self):
         self.edit(self.BINDINGS, 'siteUrl      = "http://localhost:3000/docs/"\n', '')

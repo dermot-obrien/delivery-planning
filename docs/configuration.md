@@ -58,7 +58,7 @@ All six are paths with no default.
 | `basis` | path, CSV | The planning basis: `parameter, value, unit, basis` | `"../planning/{quarter}/basis.csv"` |
 | `calendar` | path, CSV | The quarter's periods: `period_id, type, start, end, working_days, note` | `"../planning/{quarter}/calendar.csv"` |
 | `resourcing` | path, CSV | One row per person per work item (twelve columns; see the data contract) | `"../planning/{quarter}/resourcing.csv"` |
-| `quarterDir` | path, folder | The quarter's folder. It must exist, and `--links` rewrites the `*.md` files directly inside it | `"../planning/{quarter}"` |
+| `quarterDir` | path, folder | The quarter's folder. It must exist, and `--links` rewrites the `*.md` files under it, subfolders included (not hidden or `_` folders, `dist`, `build` or `node_modules`) | `"../planning/{quarter}"` |
 
 ## Optional keys with defaults
 

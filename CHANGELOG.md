@@ -6,6 +6,14 @@ Releases of the skills in this bundle, each versioned on its own and headed with
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## quarter-planning [3.6.0] - 2026-10-01
+
+A minor release: `--links` reaches more documents. Nothing it wrote before changes.
+
+### Changed
+
+- `--links` and `--links --check` cover every Markdown document under the quarter folder, subfolders included, not only those directly inside it. A link in an epic's own brief or deck, kept in a subfolder, now follows `siteUrl` like the plan documents do. Hidden folders, folders whose name starts with `_` (archives and partials), and `dist`, `build` and `node_modules` are left out. `references/links.md`, `docs/commands.md` and `docs/configuration.md` say so.
+
 ## quarter-planning [3.5.2] - 2026-09-30
 
 A patch release with the bundle's new documentation. Nothing the skill reads or writes moved.

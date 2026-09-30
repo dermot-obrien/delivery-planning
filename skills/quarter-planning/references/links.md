@@ -34,9 +34,13 @@ python <skills>/quarter-planning/bin/quarter.py --quarter <slug> --links
 python <skills>/quarter-planning/bin/quarter.py --quarter <slug> --links --check
 ```
 
-The first rewrites every definition in the quarter folder's Markdown whose label is an epic
-id, a story id or, with `externalRefSystem` bound, an epic's tracker key, and leaves the prose
-and every other definition alone. A record with no `site_route` is reported and its definition
-left as it is. The second writes nothing and exits non-zero if any definition is behind the
-model. A generator that writes links itself, a stories page or a schedule, imports
+The first rewrites every definition in the Markdown under the quarter folder whose label is an
+epic id, a story id or, with `externalRefSystem` bound, an epic's tracker key, and leaves the
+prose and every other definition alone. A record with no `site_route` is reported and its
+definition left as it is. The second writes nothing and exits non-zero if any definition is
+behind the model. A generator that writes links itself, a stories page or a schedule, imports
 `src/links.py` so it resolves routes the same way.
+
+Subfolders are included, since they hold documents such as an epic's own briefs and decks.
+Hidden folders, folders whose name starts with `_` (archives and partials), and `dist`,
+`build` and `node_modules` are left out.
