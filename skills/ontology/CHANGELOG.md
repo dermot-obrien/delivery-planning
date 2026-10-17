@@ -2,6 +2,12 @@
 
 # Changelog
 
+## [0.1.1] - 2026-10-18
+
+### Changed
+
+- The tasks say how to see the records of chosen classes and their links: name the classes here and build a knowledge-graph class view.
+
 ## [0.1.0] - 2026-10-03
 
 ### Added

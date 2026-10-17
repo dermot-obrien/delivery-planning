@@ -11,7 +11,7 @@ This repository is a bundle: it can hold several skills, each versioned and rele
 | [`quarter-planning`](skills/quarter-planning) | `pkg:generic/dermot-obrien/delivery-planning/quarter-planning` | Plans a quarter or programme increment in two stages: derives a budget of points from the calendar and the resourcing register, allocates it down to epics, then elaborates deliverables and rolls their sizes up. Checks the chain from calendar to products, frames epics against an optional definition ladder, generates epic cards, tracks feature requests, and links plan documents to each epic's and story's page |
 | [`stage-grid`](skills/stage-grid) | `pkg:generic/dermot-obrien/delivery-planning/stage-grid` | Builds a period's stage grid as a single-page app: capability lanes as rows, the stages of the definition ladder as columns, and in each cell the deliverables that build a lane towards that stage. Every block opens a panel. Opens from disk or is published with a static site |
 | [`ontology`](skills/ontology) | `pkg:generic/dermot-obrien/delivery-planning/ontology` | Reads a workspace's layered ontology, written as JSON Schema modules that extend each other by `$ref`: lists classes, shows what a class extends and links to, gives each class an IRI, and checks every `$ref` resolves. Needs only Node |
-| [`knowledge-graph`](skills/knowledge-graph) | `pkg:generic/dermot-obrien/delivery-planning/knowledge-graph` | Builds a clickable graph of a workspace's work and what it connects to from the records it already keeps, typed by its own ontology through a graph map, and writes `graph.json` and one HTML page that opens from disk. Needs `ontology` beside it. `stage-grid` reads the graph it writes |
+| [`knowledge-graph`](skills/knowledge-graph) | `pkg:generic/dermot-obrien/delivery-planning/knowledge-graph` | Builds a clickable graph of a workspace's work and what it connects to from the records it already keeps, typed by its own ontology through a graph map, and writes `graph.json` and one HTML page that opens from disk. A class view draws only the records of chosen classes, such as architecture and solution building blocks, and the links between them. Needs `ontology` beside it. `stage-grid` reads the graph it writes |
 
 Planning for other horizons, such as a sprint or a year, shares the same data model and would join this bundle as further skills.
 
@@ -108,7 +108,19 @@ Everything is configurable. The columns are the ladder register's rows, so a wor
 
 Links are configuration too: the grid is told how to find pages (an identifier manifest, a template per kind of thing, a base URL, a tracker for keys) and makes no link where there is no page, so it is not tied to any site. [examples/harbourline](skills/stage-grid/examples/harbourline/README.md) is an invented operator with six stages and its own small site, ready to open.
 
-The grid reads a work graph, `{nodes, links}`, so it does not need this bundle's planning model to be the store: anything that can write the graph, such as the [knowledge-graph](https://github.com/dermot-obrien/knowledge-graph) skill over a workspace's own registers, will do.
+The grid reads a work graph, `{nodes, links}`, so it does not need this bundle's planning model to be the store: anything that can write the graph, such as the [knowledge-graph](skills/knowledge-graph) skill over a workspace's own registers, will do.
+
+## The knowledge graph and class views
+
+`knowledge-graph` builds one graph of everything a workspace's graph map reads, laid out in lanes by role (Why, What, When, Delivery, Design). To see how the records of a few classes relate, without the rest, build a class view: give the classes as the [ontology](skills/ontology) skill names them.
+
+```bash
+node <skills>/knowledge-graph/scripts/graph.mjs build --classes mo:ABB,mo:SBB
+node <skills>/knowledge-graph/scripts/graph.mjs build --view abb-sbb
+node <skills>/knowledge-graph/scripts/graph.mjs views
+```
+
+A view keeps the records whose class is one of those given or extends one, and the links directly between them, one lane per class. It is written to `<out>/<name>/`, beside the whole graph. Name the views a workspace uses under `views` in its graph map; when two classes play one role, give each source its `class`, and each identifier scheme too. `stage-grid` reads the whole graph, never a view. See [the graph map](skills/knowledge-graph/references/graph-map.md#views).
 
 ## Documentation
 
@@ -123,6 +135,7 @@ The grid reads a work graph, `{nodes, links}`, so it does not need this bundle's
 | [Examples](docs/examples.md) | The test workspace and what each file in it shows |
 | [References](skills/quarter-planning/references) | The rules the agent reads, inside the skill |
 | [stage-grid configuration](skills/stage-grid/references/configuration.md) | The stage grid's columns, rows, placement and wording |
+| [The graph map](skills/knowledge-graph/references/graph-map.md) | The knowledge graph's roles, sources, identifier schemes, links and class views |
 
 ## Agent Skills conformance
 
