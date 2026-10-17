@@ -20,6 +20,12 @@ Class views: the records of chosen ontology classes and the links between them.
 - ontology: its tasks point to class views for seeing records of chosen classes.
 - stage-grid: its rules say to bind the whole work graph, never a class view.
 
+## quarter-planning [3.7.1] - 2026-10-18
+
+### Fixed
+
+- The test fixture workspace binds `[suite.ontology]` and `[suite.knowledge-graph]`, to the knowledge-graph example's modules and map, so the post-install check that runs every skill's check over it passes for the two skills that joined the bundle.
+
 ## ontology [0.1.0], knowledge-graph [0.1.0] - 2026-10-18
 
 The work graph joins the bundle, so the stage grid and the graph it reads ship together.
