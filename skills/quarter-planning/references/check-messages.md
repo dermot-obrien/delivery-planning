@@ -13,9 +13,9 @@ What each message from the validation and the workspace's checks means, and what
 | `D on X is typed T, which is not in the register` | A product typed outside the register | Pick a type the register holds. Never invent an id |
 | `D on X is typed T, which the register marks used No` | A retired type | Retype the product from a type in use |
 | `D on X names no type from the register` | A product with no `deliverable_id` | Type it |
-| `X flow F records rung_to R, which the ladder does not name` | A rung outside the bound ladder | Fix the rung, or the ladder |
-| `X flow F moves down the ladder, from A to B` | A movement that loses definition | Fix the rungs. A rung lost is recorded at close, not planned |
-| `WARNING X commits a flow to R but names no product whose type evidences R` | Nothing planned would show the rung was reached | Name a product of a type that evidences R, or lower the commitment |
+| `X flow F records stage_to R, which the ladder does not name` | A stage outside the bound ladder | Fix the stage, or the ladder |
+| `X flow F moves down the ladder, from A to B` | A movement that loses definition | Fix the stages. A stage lost is recorded at close, not planned |
+| `WARNING X commits a flow to R but names no product for stage R` | Nothing planned would show the stage was reached | Name a product for stage R, or lower the commitment |
 | `WARNING X records no lane`, with a ladder bound | The capability area is unstated | Set `lane` |
 | `WARNING X is recorded in both work_item.yaml and ...` | Two records for one epic | Remove one. `work_item.yaml` is used meanwhile |
 | `Stale epic cards for Q` | A card no longer matches the model | Run `--cards` and commit the result |

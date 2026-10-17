@@ -1,0 +1,87 @@
+{
+ "$comment": "An invented transit operator, to show the stage grid working end to end with nothing outside this folder. Stages come from ../registers/stages.csv; links resolve to the small site in ../site/.",
+ "title": "How Harbourline moves riders' capabilities this quarter",
+ "subtitle": "Each piece of work sits at the stage it moves its capability towards.",
+ "period": "2031-Q2",
+ "ladder": "../registers/stages.csv",
+ "epicFilter": {
+  "work_item_level": "epic"
+ },
+ "strap": "What we are working on in 2031-Q2",
+ "stages": [
+  {
+   "id": "S1",
+   "color": "#6c7a89"
+  },
+  {
+   "id": "S2",
+   "color": "#5b8db8"
+  },
+  {
+   "id": "S3",
+   "color": "#2f6f9f"
+  },
+  {
+   "id": "S4",
+   "color": "#1f4e79"
+  },
+  {
+   "id": "S5",
+   "color": "#c8651b"
+  },
+  {
+   "id": "S6",
+   "color": "#2e8b57"
+  }
+ ],
+ "consumableLabel": "Riders on board from here",
+ "boundary": {
+  "mover": "architecture",
+  "title": "Who moves it",
+  "label": "architecture can take a capability as far as Blueprinted; crews and operations take it from there"
+ },
+ "labels": {
+  "HL-21-D3": "Account-based ticketing on the gate vendor's cloud (physical pattern)"
+ },
+ "lanes": [
+  {
+   "lane": "LN-TIX",
+   "outcomes": [
+    {
+     "status": "Already boarding",
+     "text": "Paper tickets and top-up kiosks at every station",
+     "stage": "S6"
+    }
+   ]
+  },
+  {
+   "lane": "LN-JRN",
+   "outcomes": [
+    {
+     "status": "Boarding this quarter",
+     "text": "Timetable arrivals on stop displays at the 40 busiest stops",
+     "stage": "S6"
+    }
+   ]
+  },
+  {
+   "lane": "LN-FLT"
+  },
+  {
+   "lane": "LN-ACC"
+  }
+ ],
+ "links": {
+  "base": "../site/",
+  "templates": {
+   "epic": "epics/{id}.html",
+   "story": "epics/{epic}.html#{id}",
+   "pattern": "patterns/{id}.html"
+  },
+  "keys": "https://tracker.example.org/browse/{key}",
+  "none": [
+   "deliverable"
+  ]
+ },
+ "note": "Invented data: Harbourline Transit, its people and its routes do not exist. Lanes have no page here, so they open their panel but link nowhere; deliverables are never linked."
+}

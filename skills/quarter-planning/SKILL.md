@@ -5,7 +5,7 @@ license: CC-BY-4.0 AND Apache-2.0. Content under CC BY 4.0, code under Apache-2.
 compatibility: Python 3.11 or newer, and PyYAML. Reads the planning registers, the model sources and the deliverable register at whatever paths [suite.quarter-planning] in the workspace .agents/skill-bindings.toml declares. Those six paths are required and have no default, so the skill carries no directory layout; it assumes no jurisdiction's holidays either.
 metadata:
   author: dermot-obrien
-  version: "3.6.0"
+  version: "3.7.1"
   homepage: https://github.com/dermot-obrien/delivery-planning
   x-skill-requires: ""
   x-derived-from: "https://github.com/dermot-obrien/ai-assisted-work/tree/78ec34e732ace27cc50d322d33383a75fa628092/skills/quarter-planning"
@@ -74,7 +74,7 @@ are deferred and cannot load anyone's quarter.
 | Argument | What it does |
 |---|---|
 | none, or `status` | Budget against planned per epic, load against capacity per person, and what currently fails |
-| `frame EP-NNN` | Frame one epic: lane, criterion, rung movement, products |
+| `frame EP-NNN` | Frame one epic: lane, criterion, stage movement, products |
 | `size EP-NNN` | Name or revise the products on one epic and set its budget |
 | `budget` | Report the top-level budget and the ladder it comes down, and stop. Read only |
 | `validate` | Validate the whole chain: period, resources, quarter budget, epic budgets, elaboration, load, approval, framing, and the close once recorded. Read only |
@@ -117,7 +117,7 @@ runs: period, resources, quarter budget and epic budgets (1 to 4), elaboration a
 Sections 1 to 4 are integrity, and a disagreement there fails the run. Sections 5 and 6 are
 subscription: over is a scoping decision, not a defect, so they report and the run still
 passes, except that section 5 fails on a broken register rule. Section 7 fails on an approval
-the records beneath it do not support, section 8 on a rung the ladder does not name or a
+the records beneath it do not support, section 8 on a stage the ladder does not name or a
 movement down it. Warnings never fail the run. What each section answers, and exactly what
 fails, is in [references/validation-report.md](references/validation-report.md).
 
@@ -157,10 +157,10 @@ workspace with its own stage names.
 
 ## The definition ladder and framing
 
-The unit of progress is a rung on the workspace's definition ladder, bound as `ladder`: a CSV
-of `rung`, `name` and `description`, least defined first. The skill ships no ladder. Framing
-lives on the epic record as `lane`, `flows` (each with `rung_from` and `rung_to`),
-`advances_criterion_ids` and `home`, and section 8 joins it to the register's `rung` column.
+The unit of progress is a stage on the workspace's definition ladder, bound as `ladder`: a CSV
+of `stage`, `name` and `description`, least defined first. The skill ships no ladder. Framing
+lives on the epic record as `lane`, `flows` (each with `stage_from` and `stage_to`),
+`advances_criterion_ids` and `home`, and section 8 joins it to the register's `stages` column and each product's own `stage`.
 The fields, and what fails the run and what only warns, are in
 [references/framing.md](references/framing.md).
 
@@ -232,7 +232,7 @@ warning. The field mapping is in
 
 At the quarter's end, record what happened on the model records:
 
-- `rung_reached` on each flow, from the evidence that exists, never from the effort spent.
+- `stage_reached` on each flow, from the evidence that exists, never from the effort spent.
 - `actual_points` on each product, what it actually took.
 
 Once any is recorded, the validation adds section 9: each flow committed against reached
@@ -240,7 +240,7 @@ Once any is recorded, the validation adds section 9: each flow committed against
 mean ratio of actual to base points. That ratio is a hint for recalibrating the register, not
 a correction to it: change a type's base points deliberately, in the register, with the
 reasoning. Section 9 is read only. Carry anything unfinished into the next quarter as its
-starting rung.
+starting stage.
 
 ## Status
 
@@ -260,7 +260,7 @@ order:
 1. The capability area and the named flows the epic advances. One lane per epic.
 2. The `Criterion` ids it advances, as `advances_criterion_ids`. This is the join between
    ends and means.
-3. The rung movement on the Definition Ladder, from and to, per flow.
+3. The stage movement on the Definition Ladder, from and to, per flow.
 4. What will be true at the end of the quarter that is not true now. If the value statement
    is circular, the epic is unframed.
 5. The products that make it true, from the register.
@@ -273,7 +273,7 @@ folder under `epicsDir`, following the outline in
 the folder carries the argument.
 
 Two things a framing must surface, because they are the ones usually missed: a flow at a low
-rung that the outcome statement does not mention, and a two-sided shape where a provider and
+stage that the outcome statement does not mention, and a two-sided shape where a provider and
 a consumer are joined by a contract.
 
 ## Name products on an epic

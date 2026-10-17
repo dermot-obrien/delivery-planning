@@ -6,7 +6,7 @@ before. Each one opts in to something:
 
 | Key | Opts in to |
 |---|---|
-| `ladder` | Judging each epic's framing against the definition ladder, a CSV of `rung,name,description` in ascending order |
+| `ladder` | Judging each epic's framing against the definition ladder, a CSV of `stage,name,description` in ascending order |
 | `epicsDir` | Linking each generated card to the epic's own hand-written folder |
 | `cardsDir` | `--cards`, which writes the epic cards and the stage grid. May carry `{quarter}` |
 | `workItemsDir` | Reading epics from AAW work items' `progress.yaml` as well as `work_item.yaml`, and the feature requests each story cites in `request_ids` |

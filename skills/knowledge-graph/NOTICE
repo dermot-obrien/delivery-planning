@@ -1,0 +1,20 @@
+knowledge-graph: knowledge-graph skill
+Copyright 2026 Dermot O'Brien
+
+This product is licensed under CC BY 4.0 (content) and Apache-2.0 (code).
+See LICENSE and the texts in LICENSES/.
+
+Origin
+------
+
+Written for this repository and first released as knowledge-graph 0.1.0.
+It uses the ontology skill from the same bundle when that is installed beside it.
+
+scripts/lib/bindings.mjs is adapted from the cross-reference skill's
+scripts/lib/config.cjs (architecture-pattern, commit 798d11e), by the same author.
+
+Third-party software
+--------------------
+
+assets/vendor/d3.min.js is d3 7.9.0, Copyright 2010-2023 Mike Bostock, licensed
+under the ISC licence in assets/vendor/d3.LICENSE. https://d3js.org

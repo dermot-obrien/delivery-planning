@@ -51,7 +51,7 @@ bash:
 
 ```bash
 cat > registers/deliverable-types.csv <<'EOF'
-id,name,rung,base_story_points,used,description
+id,name,stages,base_story_points,used,description
 pattern,Architecture pattern,,5,Yes,A pattern with its diagram and scenarios
 decision,Decision record,,2,Yes,One settled question
 EOF
@@ -127,7 +127,7 @@ PowerShell (`Set-Content -Encoding ascii` writes the files without a byte order 
 
 ```powershell
 @'
-id,name,rung,base_story_points,used,description
+id,name,stages,base_story_points,used,description
 pattern,Architecture pattern,,5,Yes,A pattern with its diagram and scenarios
 decision,Decision record,,2,Yes,One settled question
 '@ | Set-Content -Encoding ascii registers\deliverable-types.csv

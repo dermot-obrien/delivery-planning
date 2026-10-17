@@ -75,8 +75,8 @@ The epic is the only place the two stages meet. Planned above budget is a scopin
 | 5 Elaboration | Subscription, plus register rules | A product breaks a register rule (over budget never fails) |
 | 6 Load | Subscription | Never, except a product owner missing from the resourcing register |
 | 7 Approval | Integrity of claims | An approval the records beneath it do not support |
-| 8 Framing | Judged only with a ladder | A rung the ladder does not name, or a movement down it |
-| 9 Close | Once recorded | A `rung_reached` the ladder does not name |
+| 8 Framing | Judged only with a ladder | A stage the ladder does not name, or a movement down it |
+| 9 Close | Once recorded | A `stage_reached` the ladder does not name |
 | 10 Feature requests | With `requests` bound | An unknown epic or product, a bad status or WSJF score |
 
 Warnings never fail the run. See [validation-report.md](../skills/quarter-planning/references/validation-report.md) and [Troubleshooting](troubleshooting.md).
@@ -87,7 +87,7 @@ A plan is approved in stages, `draft`, `sized`, `validated` and `approved` by de
 
 ## 13. The definition ladder and framing (optional)
 
-Progress is measured as movement up a definition ladder: rungs, least defined first, each named by the artefact that proves it. Bind a ladder and each epic's `flows` (with `rung_from` and `rung_to`) are checked against it, and the register's `rung` column says which rung each product type evidences. The skill ships no ladder. See [framing.md](../skills/quarter-planning/references/framing.md).
+Progress is measured as movement up a definition ladder: stages, least defined first, each named by the artefact that proves it. Bind a ladder and each epic's `flows` (with `stage_from` and `stage_to`) are checked against it, and the register's `stage` column says which stage each product type evidences. The skill ships no ladder. See [framing.md](../skills/quarter-planning/references/framing.md).
 
 ## 14. Epic folder and epic card (optional)
 
@@ -107,7 +107,7 @@ Consumers use products that platform teams offer. When a product cannot yet meet
 
 ## 18. Closing the quarter
 
-At the end, record `rung_reached` on each flow and `actual_points` on each product. The validation then adds section 9: committed against reached per flow, planned against actual per product, and per type the ratio of actual to base points, as a hint for recalibrating the register by hand.
+At the end, record `stage_reached` on each flow and `actual_points` on each product. The validation then adds section 9: committed against reached per flow, planned against actual per product, and per type the ratio of actual to base points, as a hint for recalibrating the register by hand.
 
 ## 19. The delivery ontology
 

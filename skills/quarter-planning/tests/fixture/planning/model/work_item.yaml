@@ -12,12 +12,12 @@ work_item:
   flows:
   - flow: Intake
     description: Brings the inputs in
-    rung_from: R0
-    rung_to: R1
+    stage_from: R0
+    stage_to: R1
   - flow: Process
     description: Turns the inputs into results
-    rung_from: R1
-    rung_to: R3
+    stage_from: R1
+    stage_to: R3
   advances_criterion_ids: [CR-001]
   budget_points: 29.5  # derived from the resourcing
   planned_points: 10

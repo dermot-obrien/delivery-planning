@@ -11,7 +11,7 @@ An agent that has loaded `quarter-planning` accepts these requests, and runs the
 | Request | What the agent does |
 |---|---|
 | none, or `status` | Budget against planned per epic, load against capacity per person, and what currently fails |
-| `frame EP-NNN` | Frames one epic: lane, criterion, rung movement, products |
+| `frame EP-NNN` | Frames one epic: lane, criterion, stage movement, products |
 | `size EP-NNN` | Names or revises the products on one epic and sets its budget |
 | `budget` | Reports the top-level budget and the ladder it comes down. Read only |
 | `validate` | Validates the whole chain. Read only |

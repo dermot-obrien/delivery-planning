@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pkg:generic/example/delivery/delivery-ontology@1.0.0",
+  "title": "Example delivery ontology",
+  "description": "A layer over the example work ontology that adds planning.",
+  "$defs": {
+    "Epic": {
+      "description": "A work item sized and scheduled in one period.",
+      "allOf": [
+        {"$ref": "pkg:generic/example/work/work-ontology#/$defs/WorkItem"},
+        {"type": "object", "properties": {
+          "period": {"type": "string", "description": "The period's label."},
+          "refines_pattern_ids": {"type": "array", "items": {"type": "string"}},
+          "advances_increment_ids": {"type": "array", "items": {"type": "string"}}
+        }}
+      ]
+    },
+    "Story": {
+      "description": "An activity of an epic.",
+      "allOf": [{"$ref": "pkg:generic/example/work/work-ontology#/$defs/Activity"}]
+    },
+    "CapabilityIncrement": {
+      "type": "object",
+      "description": "A testable step in a capability, reached in one period.",
+      "properties": {"id": {"type": "string"}, "capability_id": {"type": "string"}, "statement": {"type": "string"}}
+    },
+    "Pattern": {
+      "type": "object",
+      "description": "A recurring solution.",
+      "properties": {"id": {"type": "string"}, "name": {"type": "string"}}
+    }
+  }
+}

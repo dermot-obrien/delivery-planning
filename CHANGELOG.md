@@ -6,6 +6,36 @@ Releases of the skills in this bundle, each versioned on its own and headed with
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## quarter-planning [3.7.1] - 2026-10-18
+
+### Fixed
+
+- The test fixture workspace binds `[suite.ontology]` and `[suite.knowledge-graph]`, to the knowledge-graph example's modules and map, so the post-install check that runs every skill's check over it passes for the two skills that joined the bundle.
+
+## ontology [0.1.0], knowledge-graph [0.1.0] - 2026-10-18
+
+The work graph joins the bundle, so the stage grid and the graph it reads ship together.
+
+### Added
+
+- The `ontology` skill: reads a workspace's layered ontology, written as JSON Schema modules that extend each other by `$ref`, lists and explains its classes, gives each an IRI and checks every `$ref` resolves. See `skills/ontology/CHANGELOG.md`.
+- The `knowledge-graph` skill: builds a clickable graph of a workspace's work from the records it already keeps, typed by its ontology through a graph map, and reports identifiers referred to with no record. It writes the work graph `stage-grid` reads. It finds `ontology` installed beside it. See `skills/knowledge-graph/CHANGELOG.md`.
+- CI runs both skills' tests and the knowledge-graph worked example, and runs for pull requests to `develop` as well as `main`.
+
+## quarter-planning [3.7.0], stage-grid [0.1.0] - 2026-10-03
+
+Stages, not rungs; the stage grid as a skill; the delivery ontology at 1.1.0.
+
+### Changed
+
+- quarter-planning says stage wherever it said rung, in its reports, cards and documentation. The model's fields follow: the ladder register's `stage` column, a flow's `stage_from`, `stage_to` and `stage_reached`, the deliverable register's `stages` column. The old names are still read, so no workspace has to change; `src/stages.py` holds the one place that knows both.
+- A deliverable type is one to many with stages: the register's `stages` column lists every stage a type can be produced at, separated by `;`. A product records the one stage it is for as `stage`; without one it counts for every stage its type allows. Section 8 judges a target stage met when any product is for it.
+
+### Added
+
+- The `stage-grid` skill: a period's stage grid as a single-page app. Lanes are rows, the ladder's stages are columns, as many as the ladder has, and each cell is an increment step. Every block opens a panel; the "Who moves it" bar and the bands sit above the period's work. A deliverable whose type allows several stages and that names none is a warning, not a guess. See `skills/stage-grid/CHANGELOG.md`.
+- Delivery ontology 1.1.0, additive: `Stage` and `LadderStage`, with `Rung` and `LadderRung` kept as deprecated aliases; a flow's `stage_*` fields beside the deprecated `rung_*`; `stages` on `DeliverableType`; `stage` and `stage_reason` on `SizedDeliverable`; `CapabilityIncrement` (one lane's planned movement in one period), `IncrementStep` (one cell, derived) and `IncrementOutcome` (what others deliver that an increment counts on); optional `builds`, `band`, `moved_by` and `consumable` on a ladder row.
+
 ## quarter-planning [3.6.0] - 2026-10-01
 
 A minor release: `--links` reaches more documents. Nothing it wrote before changes.

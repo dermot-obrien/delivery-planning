@@ -1,0 +1,6 @@
+# An invented workspace for the stage-grid example. Paths are relative to this file.
+
+[suite.stage-grid]
+graph  = "../planning/graph.json"
+config = "../planning/stage-grid.json"
+out    = "../build/stage-grid"

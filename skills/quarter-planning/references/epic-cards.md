@@ -10,7 +10,7 @@ An epic has two faces. Its folder is written by hand and lives for the epic's wh
 | Where | `<epicsDir>/<home>/`, where `home` is the folder's name on the epic's model record | `<cardsDir>/<id>.md`, with `cardsDir` usually carrying `{quarter}` |
 | Written by | Hand | `quarter.py --quarter <slug> --cards` |
 | Lifetime | The epic's whole life | One quarter |
-| Holds | Framing, starting evidence, scope decisions, dependencies, what was left out, and discovery | Every figure about the epic: rung movement, products, points, states, approvals, budget against planned |
+| Holds | Framing, starting evidence, scope decisions, dependencies, what was left out, and discovery | Every figure about the epic: stage movement, products, points, states, approvals, budget against planned |
 | Links to | Each quarter's card | The folder's `index.md`, or `README.md` where that is what exists |
 
 The test for where something belongs: if a script can compute it or read it from the model, it goes on the card, and if it is an argument somebody made, it goes in the folder. A figure typed into the folder will drift from the model. An argument written on the card is overwritten by the next regeneration.
@@ -24,8 +24,8 @@ Each committed epic gets one card, `<id>.md`, in this order.
 | Frontmatter | `title`, `sidebar_label`, `sidebar_position` and `status: Generated`, followed by an HTML comment saying the file is generated and naming the command that regenerates it |
 | Opening line | The epic's title, a relative link to its folder, or a plain statement that no home is recorded, or that one is recorded but cannot be found |
 | Fields | Quarter, capability area (`lane`), approval, threads, and the criteria it advances |
-| Movement | One row per flow: what it does, the rung it starts on and the rung it is committed to reach. A column for the rung reached appears once any is recorded |
-| Deliverables | One row per deliverable: its type, the rung that type evidences from the register's `rung` column, its points, its state and its approval |
+| Movement | One row per flow: what it does, the stage it starts on and the stage it is committed to reach. A column for the stage reached appears once any is recorded |
+| Deliverables | One row per deliverable: its type, the stage it is for (its own `stage`, else the stages its type allows), its points, its state and its approval |
 | Feature requests | With the request layer bound: each request the epic takes on, its product, who asked, status, WSJF and the stories citing it. See [feature-requests.md](feature-requests.md) |
 | Products and platforms supported | With the request layer bound: the products those requests are raised against, with each one's platform and team |
 | Capacity | Budget, planned, and the difference, then one sentence: within budget, over by a stated amount, or deferred because no budget was given |
@@ -34,7 +34,7 @@ The budget on a card is the one the resourcing register distributes, taken from 
 
 Points are shown to two decimals, trimmed to one where the second is zero: 0.25, 2.0, 9.25.
 
-The cards folder also gets a `README.md` holding the quarter's stage grid, which is every flow in scope with its starting and committed rungs and a link to its card, and an epics table with budget, planned, the difference and approval for each epic.
+The cards folder also gets a `README.md` holding the quarter's stage grid, which is every flow in scope with its starting and committed stages and a link to its card, and an epics table with budget, planned, the difference and approval for each epic.
 
 ## Recommended outline of an epic folder's index page
 
@@ -43,9 +43,9 @@ The folder's `index.md` is the epic's home page. The outline below keeps the arg
 | Section | Says |
 |---|---|
 | Header | Quarters, each linking to that quarter's card, the capability area, the owner, any threads, and where the model record is |
-| The movement | The capability area and its flows, in prose. The rungs themselves are in the model and on the card |
+| The movement | The capability area and its flows, in prose. The stages themselves are in the model and on the card |
 | Why now | The demand or criterion the movement serves, or the assumption standing in for one |
-| Where it starts | The evidence that already exists, and which rung each piece would count toward |
+| Where it starts | The evidence that already exists, and which stage each piece would count toward |
 | End of quarter | What will be true that is not true now, stated so that it can be checked |
 | Deliverables | Which part of the work each deliverable belongs to, and what is produced elsewhere. The deliverables themselves, with their sizes, are on the card |
 | Dependencies | What must happen elsewhere, and who owns it |

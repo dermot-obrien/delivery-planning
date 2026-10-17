@@ -54,7 +54,7 @@ All six are paths with no default.
 | Key | Type | Points at | Example |
 |---|---|---|---|
 | `sources` | path, folder | The planning model: `work_item.yaml` and `work_plan.yaml` (both required) and `activity.yaml` (optional) | `"../planning/model"` |
-| `register` | path, CSV | The deliverable type register: `id, name, rung, base_story_points, used, description` | `"../registers/deliverable-types.csv"` |
+| `register` | path, CSV | The deliverable type register: `id, name, stages, base_story_points, used, description` | `"../registers/deliverable-types.csv"` |
 | `basis` | path, CSV | The planning basis: `parameter, value, unit, basis` | `"../planning/{quarter}/basis.csv"` |
 | `calendar` | path, CSV | The quarter's periods: `period_id, type, start, end, working_days, note` | `"../planning/{quarter}/calendar.csv"` |
 | `resourcing` | path, CSV | One row per person per work item (twelve columns; see the data contract) | `"../planning/{quarter}/resourcing.csv"` |
@@ -76,7 +76,7 @@ Each opts in to something. A workspace that declares none of them validates exac
 
 | Key | Type | Opts in to | Example |
 |---|---|---|---|
-| `ladder` | path, CSV | Judging each epic's `flows` against a definition ladder: `rung, name, description`, least defined first. Section 8 fails on an unknown rung or a downward movement | `"../registers/ladder.csv"` |
+| `ladder` | path, CSV | Judging each epic's `flows` against a definition ladder: `stage, name, description`, least defined first. Section 8 fails on an unknown stage or a downward movement | `"../registers/ladder.csv"` |
 | `epicsDir` | path, folder | Linking each epic card to the epic's hand-written folder, `<epicsDir>/<home>/index.md` (or `README.md`) | `"../epics"` |
 | `cardsDir` | path, folder | `--cards`. Written rather than read, so it need not exist before the first run. Usually carries `{quarter}` | `"../planning/{quarter}/cards"` |
 | `workItemsDir` | path, folder | Reading `<workItemsDir>/*/progress.yaml` with `work_item_level: epic` and the quarter's label as `planning_period` as epics, and their activities as stories | `"../work-items"` |
@@ -116,7 +116,7 @@ The fields the skill reads on epics, products, stories and the WorkPlan are data
 | `points`, `points_override_reason` | Product | Override the type's base points; the reason is required |
 | `approval` | WorkPlan, epic, product | Its approval stage; absent means the first stage |
 | `lane`, `flows`, `advances_criterion_ids`, `home` | Epic | Framing (section 8) and the link from the card to the folder |
-| `rung_reached`, `actual_points` | Flow, product | The close (section 9) |
+| `stage_reached`, `actual_points` | Flow, product | The close (section 9) |
 | `site_route` | Epic, story | `--links` |
 | `external_refs` | Epic | `--links` with `externalRefSystem` |
 | `request_ids` | Story | The feature-request layer |

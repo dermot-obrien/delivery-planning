@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# What this skill needs from the repository it is installed into, and nothing about
+# where any of it lives. The consuming repository answers in [suite.stage-grid] of its
+# .agents/skill-bindings.toml. Paths there are relative to that file, and may carry
+# {quarter}, replaced by --quarter.
+#
+# Checked by:  node <skills>/stage-grid/scripts/check.mjs
+
+[inputs]
+short_description = "The work graph, the period's grid configuration, and where the app goes"
+
+[inputs.options.graph]
+type = "file"
+required = true
+description = """The work graph, {nodes, links}, in the contract of references/data-contract.md.
+The knowledge-graph skill writes one."""
+
+[inputs.options.config]
+type = "file"
+required = true
+description = """The period's grid configuration: the stages or the ladder, the lanes, and
+placement. See references/configuration.md."""
+
+[inputs.options.ladder]
+type = "file"
+required = false
+description = """The definition ladder register, when the configuration does not name one.
+The same CSV as [suite.quarter-planning] ladder, with the optional columns builds, band,
+moved_by and consumable."""
+
+[inputs.options.out]
+type = "dir"
+required = false
+description = """Where the app is written: index.html, stage-grid.js and stage-grid-data.js.
+Default: stage-grid/ in the working directory."""

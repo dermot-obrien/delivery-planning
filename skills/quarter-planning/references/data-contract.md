@@ -12,7 +12,7 @@ What this skill reads, so any workspace can supply it, whether or not it uses a 
 | `calendar` | The quarter's calendar | CSV: `period_id, type, start, end, working_days, note` |
 | `basis` | The quarter's planning assumptions | CSV: `parameter, value, unit, basis`, with at least `working_days` and `usable_fraction` |
 | `resourcing` | One row per person per piece of work | CSV: `stakeholder_id, name, role, allocation_pct, gross_capacity_points, leave_working_days, adjustment_points, capacity_points, work_item_id, share_of_allocation_pct, counts_against_enabler_capacity, adjustment_reason` |
-| `register` | The deliverable types an epic can produce | CSV: `id, name, rung, base_story_points, used, description` |
+| `register` | The deliverable types an epic can produce | CSV: `id, name, stages, base_story_points, used, description` |
 | `quarterDir` | The quarter's folder, holding its plan documents | A folder |
 
 ### The planning model, in `sources`
@@ -28,7 +28,7 @@ What this skill reads, so any workspace can supply it, whether or not it uses a 
 | `planned_points` | Stage 2 | The sum of its deliverables' sizes |
 | `deliverables` | Stage 2 | A list, each with `id`, `deliverable_id` (a type in the register), `name`, `owner_stakeholder_id`, `state` and `approval` |
 | `approval` | No | Its approval stage, when `approvalStages` is bound |
-| `lane`, `flows` | No | Its capability lane, and each flow's `rung_from` and `rung_to`, when a `ladder` is bound |
+| `lane`, `flows` | No | Its capability lane, and each flow's `stage_from` and `stage_to`, when a `ladder` is bound |
 | `home` | No | Its folder under `epicsDir`, for the epic card |
 | `site_route` | No | The route of its published page, for `--links` |
 | `external_refs` | No | `system` and `external_id` pairs, such as a tracker key, for `--links` with `externalRefSystem` |
@@ -43,7 +43,7 @@ The skill edits `work_item.yaml` only through `--apply`, in place, keeping comme
 
 | Binding | Turns on | Shape |
 |---|---|---|
-| `ladder` | Framing epics against a definition ladder | CSV: `rung, name, description`, in ascending order |
+| `ladder` | Framing epics against a definition ladder | CSV: `stage, name, description`, in ascending order. The optional columns `builds`, `band`, `moved_by` and `consumable` are read by the stage-grid skill and ignored here |
 | `epicsDir`, `cardsDir` | Generated epic cards | Folders |
 | `requests`, `products` | The feature-request layer | CSVs, described in [feature-requests.md](feature-requests.md) |
 | `siteUrl`, `externalRefSystem` | Links from plan documents to epic and story pages | A URL, and a `system` name |
@@ -71,3 +71,7 @@ python <skills>/quarter-planning/bin/quarter.py --quarter <slug>
 ```
 
 It reads everything above, and names any binding that is missing, any file that is absent and any record that breaks the chain from the calendar through to the products.
+
+## Stages, once called rungs
+
+Before quarter-planning 3.7.0 a stage was called a rung. The old names are still read, so a workspace need not change: the ladder's `rung` column, a flow's `rung_from`, `rung_to` and `rung_reached`, and the register's `rung` column, read as a type's only stage. Write the new names: `stage`, `stage_from`, `stage_to`, `stage_reached`, the register's `stages` (a type can be produced at several, separated by `;`), and `stage` on a product for the one stage it is for.

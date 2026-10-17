@@ -15,8 +15,9 @@ clash is reported, because two records for one epic is a fault somebody has to r
   load_items(bind, label) -> (items, notes)
   load_plan(bind, label) -> the quarterly WorkPlan record, or None
   load_register(bind) -> {type id: register row}
-  load_ladder(bind) -> [rung, ...] in ascending order, or None when no ladder is bound
+  load_ladder(bind) -> [stage, ...] in ascending order, or None when no ladder is bound
 """
+from stages import ladder_stage
 import glob
 import io
 import os
@@ -115,11 +116,11 @@ def load_register(bind):
 
 
 def load_ladder(bind):
-    """The ladder's rungs, least defined first, or None when the workspace binds none."""
+    """The ladder's stages, least defined first, or None when the workspace binds none."""
     path = bind.optional('ladder')
     if not path:
         return None
-    return [(r.get('rung') or '').strip() for r in rows(path) if (r.get('rung') or '').strip()]
+    return [ladder_stage(r) for r in rows(path) if ladder_stage(r)]
 
 
 def committed_ids(plan, items, label, budgeted=()):

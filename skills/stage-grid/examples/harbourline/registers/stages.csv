@@ -1,0 +1,7 @@
+stage,name,description,builds,band,moved_by,consumable
+S1,Noticed,Someone has written down that riders need it.,A line in the capability map; A rider complaint traced to it,Discover,design guild,no
+S2,Framed,We have said who it is for and what good looks like.,Framing canvas; Journeys named,Discover,design guild,no
+S3,Shaped,The approach is agreed; the technology is still open.,A pattern per journey; Building blocks named,Design,architecture,no
+S4,Blueprinted,The technology is chosen and the design endorsed. A crew could build it.,Physical pattern; Decision at the design forum,Design,architecture,no
+S5,Built,Running on a test line with real vehicles and evidence it is safe.,Pilot on one route; Safety case,Build,delivery crews,no
+S6,Boarding,Riders are using it every day and someone is on call for it.,Service on every route; Runbook and on-call,Run,operations,yes

@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# What this skill needs from the repository it is installed into, and nothing about
+# where any of it lives. The consuming repository answers in [suite.ontology] of its
+# .agents/skill-bindings.toml. Paths there are relative to that file.
+#
+# Checked by:  node <skills>/ontology/scripts/check.mjs
+
+[inputs]
+short_description = "The ontology module files the workspace uses, and any prefixes it declares"
+
+[inputs.options.modules]
+type = "list"
+required = true
+description = """Every ontology module the workspace uses, as JSON Schema files, including
+each layer another module extends. This list is the source map: nothing is fetched."""
+
+[inputs.options.prefixes]
+type = "list"
+required = false
+description = """Prefixes to use for modules, as "name=module-id", for example
+"mo=https://example.org/standards/ontology-schema.json". A module without one gets a
+prefix from its id."""

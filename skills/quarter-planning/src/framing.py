@@ -9,28 +9,26 @@ means a figure in section 5 rests on something the register does not support, so
 fails the run.
 
 Framing reads each committed epic's `lane` and `flows`. A flow is a named path through a
-capability, recorded with the rung it starts on and the rung the epic commits it to reach.
-With a ladder bound, a rung the ladder does not name, or a movement down it, is the model
-contradicting itself and fails the run. An epic whose products evidence none of a target
-rung, or that names no lane, is a warning: the framing is incomplete, not wrong. With no
-ladder bound the flows are reported as recorded and nothing is judged.
+capability, recorded with the stage it starts on and the stage the epic commits it to reach.
+With a ladder bound, a stage the ladder does not name, or a movement down it, is the model
+contradicting itself and fails the run. An epic with no product for a target stage, or
+that names no lane, is a warning: the framing is incomplete, not wrong. A product is for
+its own recorded stage, else for any stage its type can be produced at. With no ladder
+bound the flows are reported as recorded and nothing is judged. The old field names
+(rung_*) are read too; see stages.py.
 
-The close reads what happened: `rung_reached` on each flow and `actual_points` on each
+The close reads what happened: `stage_reached` on each flow and `actual_points` on each
 product. It compares them with what was committed and planned, and gives, per register
 type, the mean ratio of actual to base points as a hint for recalibrating the register.
 It changes nothing.
 """
+from stages import flow_stage, product_stages
 from capacity import f, product_points
 from report import pts, table
 
 
 def _rank(ladder):
     return {r: i for i, r in enumerate(ladder or [])}
-
-
-def type_rung(register, d):
-    row = register.get((d.get('deliverable_id') or '').strip()) or {}
-    return (row.get('rung') or '').strip()
 
 
 # ------------------------------------------------------------------- register rules
@@ -81,17 +79,17 @@ def framing_section(epics, register, ladder, err, warn):
             no_flows.append(wid)
         if ladder and not lane:
             warn('%s records no lane, so the capability area it advances is unstated' % wid)
-        evidenced = {type_rung(register, d) for d in item.get('deliverables') or []}
+        evidenced = {s for d in item.get('deliverables') or [] for s in product_stages(d, register)}
         targets = []
         for fl in flows:
             name = fl.get('flow') or '(unnamed flow)'
-            a, b = fl.get('rung_from'), fl.get('rung_to')
+            a, b = flow_stage(fl, 'from'), flow_stage(fl, 'to')
             body.append([wid, lane or '-', name, a or '-', b or '-',
                          'yes' if b and b in evidenced else 'no'])
             if not ladder:
                 continue
             ok = True
-            for which, value in (('rung_from', a), ('rung_to', b)):
+            for which, value in (('stage_from', a), ('stage_to', b)):
                 if value is None or str(value).strip() == '':
                     err('%s flow %s records no %s' % (wid, name, which))
                     ok = False
@@ -108,8 +106,8 @@ def framing_section(epics, register, ladder, err, warn):
                 targets.append(b)
         for b in targets:
             if b not in evidenced:
-                warn('%s commits a flow to %s but names no product whose type evidences %s, '
-                     'so nothing in the plan would show the rung was reached' % (wid, b, b))
+                warn('%s commits a flow to %s but names no product for stage %s, '
+                     'so nothing in the plan would show the stage was reached' % (wid, b, b))
     if body:
         print(table(['epic', 'lane', 'flow', 'from', 'to', 'evidenced'], body))
     if no_flows:
@@ -121,7 +119,7 @@ def framing_section(epics, register, ladder, err, warn):
 
 # ---------------------------------------------------------------------------- close
 def has_close(epics):
-    return any(fl.get('rung_reached') for e in epics for fl in e.get('flows') or []) or any(
+    return any(flow_stage(fl, 'reached') for e in epics for fl in e.get('flows') or []) or any(
         d.get('actual_points') is not None for e in epics for d in e.get('deliverables') or [])
 
 
@@ -131,19 +129,19 @@ def close_section(epics, register, base, ladder, err):
     body = []
     for item in epics:
         for fl in item.get('flows') or []:
-            to, got = fl.get('rung_to'), fl.get('rung_reached')
+            to, got = flow_stage(fl, 'to'), flow_stage(fl, 'reached')
             if not got:
                 result = 'not recorded'
             elif ladder and got not in rank:
-                err('%s flow %s records rung_reached %s, which the ladder does not name'
+                err('%s flow %s records stage_reached %s, which the ladder does not name'
                     % (item['id'], fl.get('flow'), got))
-                result = 'unknown rung'
+                result = 'unknown stage'
             elif ladder and to in rank:
                 result = ('reached' if rank[got] == rank[to]
                           else 'beyond' if rank[got] > rank[to] else 'short')
             else:
                 result = 'reached' if got == to else 'differs'
-            body.append([item['id'], fl.get('flow') or '-', fl.get('rung_from') or '-',
+            body.append([item['id'], fl.get('flow') or '-', flow_stage(fl, 'from') or '-',
                          to or '-', got or '-', result])
     if body:
         print('  Flows, committed against reached.')

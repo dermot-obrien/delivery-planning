@@ -18,3 +18,19 @@ cardsDir     = "../planning/{quarter}/cards"
 workItemsDir = "../work-items"
 siteUrl      = "http://localhost:3000/docs/"
 externalRefSystem = "tracker"
+
+[suite.stage-grid]
+# Shape only: the grid is built per quarter, so {quarter} defers the files to the run.
+graph  = "../planning/{quarter}/graph.json"
+config = "../planning/{quarter}/stage-grid.json"
+
+# The post-install check runs every skill's check here. ontology and knowledge-graph keep
+# no records of their own in this fixture, so they read the knowledge-graph example's.
+[suite.ontology]
+modules = [
+  "../../../../knowledge-graph/examples/workspace/ontology/work.schema.json",
+  "../../../../knowledge-graph/examples/workspace/ontology/delivery.schema.json",
+]
+
+[suite.knowledge-graph]
+map = "../../../../knowledge-graph/examples/workspace/graph-map.json"

@@ -1,0 +1,14 @@
+knowledge-graph: ontology skill
+Copyright 2026 Dermot O'Brien
+
+This product is licensed under CC BY 4.0 (content) and Apache-2.0 (code).
+See LICENSE and the texts in LICENSES/.
+
+Origin
+------
+
+Written for this repository and first released as ontology 0.1.0.
+It ships its own runtime and depends on no other skill.
+
+scripts/lib/bindings.mjs is adapted from the cross-reference skill's
+scripts/lib/config.cjs (architecture-pattern, commit 798d11e), by the same author.
