@@ -1,0 +1,365 @@
+{
+ "meta": {
+  "title": "Invented work graph for the stage grid example"
+ },
+ "nodes": [
+  {
+   "id": "2030-Q1",
+   "role": "period",
+   "label": "2030-Q1",
+   "props": {}
+  },
+  {
+   "id": "2030-Q2",
+   "role": "period",
+   "label": "2030-Q2",
+   "props": {}
+  },
+  {
+   "id": "LN-1",
+   "role": "capability",
+   "label": "Order capture",
+   "props": {
+    "description": "An invented capability for the example."
+   }
+  },
+  {
+   "id": "LN-2",
+   "role": "capability",
+   "label": "Order tracking",
+   "props": {
+    "description": "An invented capability for the example."
+   }
+  },
+  {
+   "id": "IN-1",
+   "role": "initiative",
+   "label": "Digital ordering",
+   "props": {}
+  },
+  {
+   "id": "INC-1",
+   "role": "increment",
+   "label": "Orders are taken on the new channel for one product line",
+   "props": {
+    "satisfaction_status": "pending"
+   }
+  },
+  {
+   "id": "PAT-1",
+   "role": "pattern",
+   "label": "Channel order intake",
+   "url": "/site/patterns/pat-1/",
+   "props": {}
+  },
+  {
+   "id": "T-CAT",
+   "role": "deliverable-type",
+   "label": "Catalogue",
+   "props": {
+    "stages": "R1;R2"
+   }
+  },
+  {
+   "id": "T-PAT",
+   "role": "deliverable-type",
+   "label": "Pattern",
+   "props": {
+    "stages": "R2;R3"
+   }
+  },
+  {
+   "id": "T-PHY",
+   "role": "deliverable-type",
+   "label": "Physical pattern",
+   "props": {
+    "stages": "R4"
+   }
+  },
+  {
+   "id": "T-PLAN",
+   "role": "deliverable-type",
+   "label": "Plan",
+   "props": {}
+  },
+  {
+   "id": "EP-1",
+   "role": "epic",
+   "label": "Order intake on the new channel",
+   "url": "/site/epics/ep-1/",
+   "props": {
+    "key": "TRK-1",
+    "work_item_level": "epic",
+    "status": "planning",
+    "goal": "Take orders on the new channel.",
+    "budget_points": 20,
+    "planned_points": 18
+   }
+  },
+  {
+   "id": "EP-2",
+   "role": "epic",
+   "label": "Order status for customers",
+   "props": {
+    "work_item_level": "epic",
+    "planned_points": 8
+   }
+  },
+  {
+   "id": "EP-3",
+   "role": "epic",
+   "label": "Returns triage, next quarter",
+   "props": {
+    "work_item_level": "epic"
+   }
+  },
+  {
+   "id": "WS-1",
+   "role": "epic",
+   "label": "A workstream, filtered out",
+   "props": {
+    "work_item_level": "workstream"
+   }
+  },
+  {
+   "id": "EP-1-D1",
+   "role": "deliverable",
+   "label": "Catalogue of capabilities for order intake",
+   "props": {
+    "state": "planned",
+    "stage": "R1"
+   }
+  },
+  {
+   "id": "EP-1-D2",
+   "role": "deliverable",
+   "label": "Catalogue of building blocks for order intake",
+   "props": {
+    "state": "planned",
+    "stage": "R2"
+   }
+  },
+  {
+   "id": "EP-1-D3",
+   "role": "deliverable",
+   "label": "Order intake pattern",
+   "props": {
+    "state": "drafted",
+    "stage": "R3"
+   }
+  },
+  {
+   "id": "EP-1-D4",
+   "role": "deliverable",
+   "label": "Physical pattern on platform A",
+   "props": {}
+  },
+  {
+   "id": "EP-1-D5",
+   "role": "deliverable",
+   "label": "Physical pattern on platform B",
+   "props": {}
+  },
+  {
+   "id": "EP-1-D6",
+   "role": "deliverable",
+   "label": "Quarter plan for order intake",
+   "props": {}
+  },
+  {
+   "id": "EP-2-D1",
+   "role": "deliverable",
+   "label": "Status pattern",
+   "props": {
+    "stage": "R3"
+   }
+  },
+  {
+   "id": "EP-2-D2",
+   "role": "deliverable",
+   "label": "Status pattern, early draft",
+   "props": {
+    "stage": "R3"
+   }
+  },
+  {
+   "id": "EP-1-A1",
+   "role": "story",
+   "label": "Write the intake pattern",
+   "props": {
+    "status": "pending",
+    "key": "TRK-11"
+   }
+  },
+  {
+   "id": "EP-1-A2",
+   "role": "story",
+   "label": "Plan the quarter",
+   "props": {
+    "status": "done"
+   }
+  }
+ ],
+ "links": [
+  {
+   "source": "EP-1",
+   "target": "2030-Q1",
+   "p": "scheduledIn"
+  },
+  {
+   "source": "EP-2",
+   "target": "2030-Q1",
+   "p": "scheduledIn"
+  },
+  {
+   "source": "EP-3",
+   "target": "2030-Q2",
+   "p": "scheduledIn"
+  },
+  {
+   "source": "WS-1",
+   "target": "2030-Q1",
+   "p": "scheduledIn"
+  },
+  {
+   "source": "WS-1",
+   "target": "LN-1",
+   "p": "advances"
+  },
+  {
+   "source": "EP-1",
+   "target": "LN-1",
+   "p": "advances"
+  },
+  {
+   "source": "EP-1",
+   "target": "INC-1",
+   "p": "advances"
+  },
+  {
+   "source": "EP-1",
+   "target": "IN-1",
+   "p": "partOf"
+  },
+  {
+   "source": "EP-1",
+   "target": "PAT-1",
+   "p": "refines"
+  },
+  {
+   "source": "EP-2",
+   "target": "LN-2",
+   "p": "advances"
+  },
+  {
+   "source": "EP-2",
+   "target": "EP-1",
+   "p": "dependsOn"
+  },
+  {
+   "source": "EP-3",
+   "target": "LN-2",
+   "p": "advances"
+  },
+  {
+   "source": "EP-1",
+   "target": "EP-1-D1",
+   "p": "produces"
+  },
+  {
+   "source": "EP-1",
+   "target": "EP-1-D2",
+   "p": "produces"
+  },
+  {
+   "source": "EP-1",
+   "target": "EP-1-D3",
+   "p": "produces"
+  },
+  {
+   "source": "EP-1",
+   "target": "EP-1-D4",
+   "p": "produces"
+  },
+  {
+   "source": "EP-1",
+   "target": "EP-1-D5",
+   "p": "produces"
+  },
+  {
+   "source": "EP-1",
+   "target": "EP-1-D6",
+   "p": "produces"
+  },
+  {
+   "source": "EP-2",
+   "target": "EP-2-D1",
+   "p": "produces"
+  },
+  {
+   "source": "EP-2",
+   "target": "EP-2-D2",
+   "p": "produces"
+  },
+  {
+   "source": "EP-1-D1",
+   "target": "T-CAT",
+   "p": "typedAs"
+  },
+  {
+   "source": "EP-1-D2",
+   "target": "T-CAT",
+   "p": "typedAs"
+  },
+  {
+   "source": "EP-1-D3",
+   "target": "T-PAT",
+   "p": "typedAs"
+  },
+  {
+   "source": "EP-1-D4",
+   "target": "T-PHY",
+   "p": "typedAs"
+  },
+  {
+   "source": "EP-1-D5",
+   "target": "T-PHY",
+   "p": "typedAs"
+  },
+  {
+   "source": "EP-1-D6",
+   "target": "T-PLAN",
+   "p": "typedAs"
+  },
+  {
+   "source": "EP-2-D1",
+   "target": "T-PAT",
+   "p": "typedAs"
+  },
+  {
+   "source": "EP-2-D2",
+   "target": "T-PAT",
+   "p": "typedAs"
+  },
+  {
+   "source": "EP-1-A1",
+   "target": "EP-1",
+   "p": "partOf"
+  },
+  {
+   "source": "EP-1-A1",
+   "target": "EP-1-D3",
+   "p": "produces"
+  },
+  {
+   "source": "EP-1-A2",
+   "target": "EP-1",
+   "p": "partOf"
+  },
+  {
+   "source": "EP-1-A2",
+   "target": "EP-1-D6",
+   "p": "produces"
+  }
+ ]
+}

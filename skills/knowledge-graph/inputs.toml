@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# What this skill needs from the repository it is installed into, and nothing about
+# where any of it lives. The consuming repository answers in [suite.knowledge-graph] of
+# its .agents/skill-bindings.toml. Paths there are relative to that file. The ontology
+# itself is bound in [suite.ontology], for the ontology skill.
+#
+# Checked by:  node <skills>/knowledge-graph/scripts/check.mjs
+
+[inputs]
+short_description = "The graph map, and where the built graph goes"
+
+[inputs.options.map]
+type = "file"
+required = true
+description = """The graph map: which class plays each role, which files hold records and
+which fields link them. See references/graph-map.md."""
+
+[inputs.options.out]
+type = "dir"
+required = false
+description = """Where graph.json and index.html are written. Default: knowledge-graph/ in
+the working directory."""

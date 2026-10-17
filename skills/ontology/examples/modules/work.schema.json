@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pkg:generic/example/work/work-ontology@1.0.0",
+  "title": "Example work ontology",
+  "description": "A small base layer for the examples: work items, their activities and what they deliver.",
+  "$defs": {
+    "WorkItem": {
+      "type": "object",
+      "description": "A bounded piece of work with a goal.",
+      "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "initiative_id": {"type": "string", "description": "The initiative the work belongs to."},
+        "depends_on_work_item_ids": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "Activity": {
+      "type": "object",
+      "description": "One unit of a work item's work.",
+      "properties": {
+        "id": {"type": "string"},
+        "work_item_id": {"type": "string"},
+        "title": {"type": "string"}
+      }
+    },
+    "Initiative": {
+      "type": "object",
+      "description": "A body of change that groups work items toward a shared goal.",
+      "properties": {"id": {"type": "string"}, "name": {"type": "string"}}
+    }
+  }
+}

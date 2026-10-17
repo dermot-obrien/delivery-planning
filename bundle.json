@@ -2,7 +2,7 @@
   "$schema": "pkg:generic/dermot-obrien/ai-assisted-work/bundle-schema@1.0.0",
   "name": "delivery-planning",
   "owner": "dermot-obrien",
-  "description": "Delivery planning skills and the delivery layer of the ontology: epics and stories on the work layer, capacity and resourcing, deliverable types, products and feature requests.",
+  "description": "Delivery planning skills and the delivery layer of the ontology: epics and stories on the work layer, capacity and resourcing, deliverable types, products and feature requests, capability increments and the stage grid that shows them.",
   "license": "CC-BY-4.0 AND Apache-2.0",
   "homepage": "https://github.com/dermot-obrien/delivery-planning",
   "derived_from": [
@@ -12,21 +12,77 @@
     {
       "name": "quarter-planning",
       "path": "skills/quarter-planning",
-      "version": "3.6.0",
-      "purl": "pkg:generic/dermot-obrien/delivery-planning/quarter-planning@3.6.0",
+      "version": "3.7.1",
+      "purl": "pkg:generic/dermot-obrien/delivery-planning/quarter-planning@3.7.1",
       "requires": [],
       "check": {
-        "command": ["python", "bin/check.py"],
+        "command": [
+          "python",
+          "bin/check.py"
+        ],
         "runtime": "python",
         "description": "Python 3.11+, PyYAML, and [suite.quarter-planning] declaring the six required paths, each resolving"
+      }
+    },
+    {
+      "name": "stage-grid",
+      "path": "skills/stage-grid",
+      "version": "0.1.0",
+      "purl": "pkg:generic/dermot-obrien/delivery-planning/stage-grid@0.1.0",
+      "requires": [],
+      "check": {
+        "command": [
+          "node",
+          "scripts/check.mjs"
+        ],
+        "runtime": "node",
+        "description": "[suite.stage-grid] binds a graph and a configuration; without {quarter}, both exist and the grid builds without warnings"
+      }
+    },
+    {
+      "name": "ontology",
+      "path": "skills/ontology",
+      "version": "0.1.0",
+      "purl": "pkg:generic/dermot-obrien/delivery-planning/ontology@0.1.0",
+      "requires": [],
+      "check": {
+        "command": [
+          "node",
+          "scripts/check.mjs"
+        ],
+        "runtime": "node",
+        "description": "[suite.ontology] binds at least one module, every bound module loads, and every $ref resolves to a bound module and class"
+      }
+    },
+    {
+      "name": "knowledge-graph",
+      "path": "skills/knowledge-graph",
+      "version": "0.2.0",
+      "purl": "pkg:generic/dermot-obrien/delivery-planning/knowledge-graph@0.2.0",
+      "requires": [
+        {
+          "purl": "pkg:generic/dermot-obrien/delivery-planning/ontology",
+          "range": "^0.1.0"
+        }
+      ],
+      "check": {
+        "command": [
+          "node",
+          "scripts/check.mjs"
+        ],
+        "runtime": "node",
+        "description": "[suite.knowledge-graph] binds a graph map, and it builds without warnings: every source is readable and every mapped class is in the bound ontology"
       }
     }
   ],
   "ontology": {
-    "id": "pkg:generic/dermot-obrien/delivery-planning/delivery-ontology@1.0.0",
+    "id": "pkg:generic/dermot-obrien/delivery-planning/delivery-ontology@1.1.0",
     "path": "ontology/delivery.schema.json",
     "extends": [
-      { "purl": "pkg:generic/dermot-obrien/ai-assisted-work/work-ontology", "range": "^1.0.0" }
+      {
+        "purl": "pkg:generic/dermot-obrien/ai-assisted-work/work-ontology",
+        "range": "^1.0.0"
+      }
     ]
   },
   "adapters": {

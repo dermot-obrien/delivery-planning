@@ -1,0 +1,43 @@
+{
+  "$comment": "The roles the knowledge graph knows how to lay out, and the predicates it knows how to draw. A workspace maps each role it uses to a class of its own ontology in its graph map; it never changes this file.",
+  "lanes": [
+    {"id": "why", "label": "Why"},
+    {"id": "what", "label": "What"},
+    {"id": "when", "label": "When"},
+    {"id": "delivery", "label": "Delivery"},
+    {"id": "design", "label": "Design"}
+  ],
+  "roles": {
+    "initiative": {"label": "Initiative", "lane": "why", "shape": "square", "color": 0, "description": "A funded body of change that groups epics toward a shared goal"},
+    "need": {"label": "Need", "lane": "why", "shape": "triangle", "color": 1, "description": "What someone needs done: a use case, an opportunity, a demand item"},
+    "capability": {"label": "Capability", "lane": "what", "shape": "circle", "color": 2, "description": "An ability the organisation has or wants, at any level"},
+    "increment": {"label": "Capability increment", "lane": "what", "shape": "diamond", "color": 3, "description": "A stated, testable step in a capability, reached in one period"},
+    "period": {"label": "Period", "lane": "when", "shape": "square", "color": 4, "description": "A planning period: a quarter, a sprint, a programme increment"},
+    "epic": {"label": "Epic", "lane": "delivery", "shape": "circle", "color": 5, "description": "A sized piece of work in one period, made of stories"},
+    "story": {"label": "Story", "lane": "delivery", "shape": "circle", "color": 6, "description": "One unit of an epic's work, small enough to finish in a sprint"},
+    "deliverable": {"label": "Deliverable", "lane": "delivery", "shape": "diamond", "color": 7, "description": "A named product of work that someone accepts"},
+    "deliverable-type": {"label": "Deliverable type", "lane": "delivery", "shape": "square", "color": 8, "description": "A kind of deliverable from a register, with its standard and size"},
+    "product": {"label": "Product", "lane": "what", "shape": "square", "color": 9, "description": "A consumable surface others build on or use"},
+    "request": {"label": "Request", "lane": "why", "shape": "triangle", "color": 10, "description": "A request raised against a product"},
+    "pattern": {"label": "Pattern", "lane": "design", "shape": "hexagon", "color": 11, "description": "A recurring solution, at any scope"},
+    "building-block": {"label": "Building block", "lane": "design", "shape": "circle", "color": 12, "description": "A reusable architecture or solution building block"},
+    "party": {"label": "Party", "lane": "why", "shape": "circle", "color": 13, "description": "A person, team or stakeholder"},
+    "other": {"label": "Other", "lane": "what", "shape": "circle", "color": 14, "description": "A record whose role the graph map does not name"}
+  },
+  "predicates": {
+    "partOf": "is part of",
+    "scheduledIn": "is scheduled in",
+    "advances": "advances",
+    "produces": "produces",
+    "typedAs": "is a",
+    "refines": "refines",
+    "realises": "realises",
+    "requests": "requests",
+    "serves": "serves",
+    "implements": "implements",
+    "dependsOn": "depends on",
+    "uses": "uses",
+    "owns": "is owned by",
+    "relatedTo": "is related to"
+  }
+}

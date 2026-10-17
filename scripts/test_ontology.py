@@ -72,7 +72,7 @@ def main():
     progress = load_yaml("work-items", "WI-002", "progress.yaml")
     rows = {
         "DeliverableType": load_csv("registers", "deliverable-types.csv"),
-        "LadderRung": load_csv("registers", "ladder.csv"),
+        "LadderStage": load_csv("registers", "ladder.csv"),
         "CalendarPeriod": load_csv("planning", "2027-q1", "2027-q1-calendar.csv"),
         "PlanningAssumption": load_csv("planning", "2027-q1", "2027-q1-planning-basis.csv"),
         "Allocation": load_csv("planning", "2027-q1", "2027-q1-resourcing.csv"),
@@ -113,6 +113,32 @@ def main():
         x["activities"] = [{"id": "WI-002-A1", "title": "Story", "status": "pending",
                             "request_ids": "FRQ-001"}]
         check("request_ids must be a list", x, "Epic", False, tmp)
+
+        # The stage grid: the ladder's optional columns, the increment and its steps.
+        check("a stage with what is built and who moves it matches LadderStage",
+              {"stage": "R2", "name": "Bounded", "builds": "Building block set; Scenario list",
+               "moved_by": "architecture", "consumable": "no"}, "LadderStage", True, tmp)
+        x = copy.deepcopy(progress)
+        x["deliverables"][0]["stage"] = "R1"
+        x["deliverables"][0]["stage_reason"] = "A capability catalogue names, it does not bound"
+        check("a deliverable for its own stage matches Epic", x, "Epic", True, tmp)
+        increment = {"id": "CI-2027-Q1-LN1", "lane": "LN-1", "period": "2027-Q1",
+                     "flows": [{"flow": "Order intake", "stage_from": "R1", "stage_to": "R3"}],
+                     "epic_ids": ["WI-002"], "criterion_ids": [],
+                     "outcomes": [{"text": "Orders taken on the new channel", "status": "delivered this period", "stage": "R4"}]}
+        check("an increment matches CapabilityIncrement", increment, "CapabilityIncrement", True, tmp)
+        x = copy.deepcopy(increment)
+        del x["lane"]
+        check("an increment with no lane is refused", x, "CapabilityIncrement", False, tmp)
+        x = copy.deepcopy(increment)
+        x["outcomes"] = [{"status": "delivered"}]
+        check("an outcome with no text is refused", x, "CapabilityIncrement", False, tmp)
+        check("the old rung names still validate", {"rung": "R2", "name": "Bounded"}, "LadderRung", True, tmp)
+        check("a type can be produced at several stages",
+              {"id": "plan", "name": "Plan", "stages": "R1;R2", "base_story_points": 1}, "DeliverableType", True, tmp)
+        check("a flow with neither stage names is refused", {"flow": "Intake"}, "Flow", False, tmp)
+        check("a step matches IncrementStep",
+              {"increment": "CI-2027-Q1-LN1", "stage": "R2", "deliverable_ids": ["WI-002-D1"]}, "IncrementStep", True, tmp)
 
     print(f"\n{failures} failure(s)." if failures else "\ndelivery.schema.json: all cases pass.")
     return 1 if failures else 0

@@ -1,0 +1,18 @@
+{
+  "initiatives": [
+    {"id": "IN-01", "name": "Digital ordering"},
+    {"id": "IN-02", "name": "After-sales service"}
+  ],
+  "increments": [
+    {"id": "INC-01", "capability_id": "CAP-01", "statement": "Orders are taken on the new channel for one product line"},
+    {"id": "INC-02", "capability_id": "CAP-02", "statement": "Customers see an order's status without calling"}
+  ],
+  "capabilities": [
+    {"id": "CAP-01", "name": "Order capture"},
+    {"id": "CAP-02", "name": "Order tracking"}
+  ],
+  "patterns": [
+    {"id": "PAT-910", "name": "Channel order intake", "route": "patterns/pat-910/"},
+    {"id": "PAT-911", "name": "Event-driven status"}
+  ]
+}

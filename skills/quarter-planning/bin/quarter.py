@@ -32,8 +32,8 @@ approved before the quarter's budget and resourcing are, or an epic sized with n
 Level 5 also enforces the register: every product is typed from the deliverable register,
 the type is in use where the register has a `used` column, and an explicit `points` carries
 a `points_override_reason`. Level 8 reads each epic's `lane` and `flows`. With a `ladder`
-bound, an unknown rung or a movement down the ladder fails the run, and a missing lane or a
-target rung no product evidences is a warning. Level 9 appears only once `rung_reached` or
+bound, an unknown stage or a movement down the ladder fails the run, and a missing lane or a
+target stage no product is for is a warning. Level 9 appears only once `stage_reached` or
 `actual_points` has been recorded, and is read only.
 
 Nothing is mastered here, and the capacity arithmetic is not implemented here either: it is
@@ -46,7 +46,7 @@ declared in [suite.quarter-planning] of its .agents/skill-bindings.toml:
   resourcing   people, allocation, leave, and the share of each going to each epic
   sources      work_item.yaml, for budget_points and the named products, and work_plan.yaml,
                for which epics the quarter committed to
-  register     base points per product type, the `used` flag, and the rung each type evidences
+  register     base points per product type, the `used` flag, and the stages each type can be produced at
 
 None of those has a default. Optional keys opt in to more: `ladder` for the definition
 ladder, `epicsDir` and `cardsDir` for the epic folders and the generated cards, and

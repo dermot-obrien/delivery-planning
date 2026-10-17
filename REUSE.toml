@@ -36,6 +36,10 @@ path = [
   "skills/**/src/**",
   "skills/**/tests/**",
   "skills/**/scripts/**",
+  "skills/**/app/**",
+  "skills/**/assets/viewer.html",
+  "skills/**/assets/viewer.js",
+  "skills/**/assets/roles.json",
   "skills/**/inputs.toml",
   "skills/**/pyproject.toml",
   "skills/**/tests/fixture/**.csv",
@@ -66,3 +70,11 @@ path = [
 precedence = "override"
 SPDX-FileCopyrightText = "2026 Dermot O'Brien"
 SPDX-License-Identifier = "CC-BY-4.0"
+
+# --- Third-party: d3, bundled with the knowledge-graph viewer ---
+[[annotations]]
+path = ["skills/knowledge-graph/assets/vendor/**"]
+precedence = "override"
+SPDX-FileCopyrightText = "2010-2023 Mike Bostock"
+SPDX-License-Identifier = "ISC"
+

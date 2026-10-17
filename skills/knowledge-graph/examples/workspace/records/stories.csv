@@ -1,0 +1,5 @@
+id,work_item_id,title,produces
+EP-901-A1,EP-901,Name the intake scenarios worth planning for,EP-901-D1
+EP-901-A2,EP-901,Write the intake pattern,EP-901-D1
+EP-901-A3,EP-901,Plan the quarter for order intake,EP-901-D2
+EP-902-A1,EP-902,Design the status notification,EP-902-D1
