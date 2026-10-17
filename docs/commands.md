@@ -86,6 +86,21 @@ It takes no other arguments. It checks Python 3.11 or newer, PyYAML, and `[suite
 
 `SKILL_DIR` sets the skill's folder when the script is run from somewhere unusual; see [Configuration](configuration.md#environment).
 
+## `knowledge-graph/scripts/graph.mjs`
+
+Run from the workspace root. `--map` and `--out` default to `map` and `out` in `[suite.knowledge-graph]`.
+
+| Command | What it does |
+|---|---|
+| `graph.mjs build [--map file] [--out dir] [--json] [--strict]` | Writes `graph.json` and `index.html`. `--json` skips the page; `--strict` exits 1 on a build warning |
+| `graph.mjs gaps [--map file] [--json]` | Lists identifiers referred to with no record, and records with no page. Exits 1 when there are any |
+| `graph.mjs show <id> [--map file]` | Prints one node and its links |
+| `graph.mjs views [--map file]` | Lists the class views the map names |
+| any command with `--classes <class,class>` | A class view: only records of those classes, or of classes that extend them, and the links between them. `build` writes it to `<out>/<classes>/`, such as `abb-sbb` |
+| any command with `--view <name>` | The class view the map names under `views`. `build` writes it to `<out>/<name>/` |
+
+A class view with no records exits 1 and writes nothing. Exit 2 is a usage error, an unknown view or a missing map.
+
 ## Repository scripts
 
 For contributors, run from the repository root. CI runs all of them.
@@ -99,6 +114,7 @@ For contributors, run from the repository root. CI runs all of them.
 | `node scripts/validate-bundle.mjs --run-checks <workspace> [--skills <dir>] [bundleDir]` | Runs each skill's post-install check in `<workspace>`, as an installer would |
 | `node scripts/validate-bundle.mjs ... --schemas <dir>` | In any form, loads more schemas by `$id`. Repeatable |
 | `node scripts/validate-bundle.mjs --help` | Prints the usage above |
+| `node --test skills/ontology/tests/ontology.test.mjs skills/knowledge-graph/tests/graph.test.mjs` | The ontology and knowledge-graph tests, including class views |
 | `python scripts/test_ontology.py` | Validates `ontology/delivery.schema.json` against every file of the test fixture, and against cases it must refuse. Takes no arguments |
 | `skills-ref validate skills/quarter-planning` | The specification's reference validator. Install it as the [README](../README.md#agent-skills-conformance) says; on Windows set `PYTHONUTF8=1` first |
 

@@ -6,6 +6,20 @@ Releases of the skills in this bundle, each versioned on its own and headed with
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## knowledge-graph [0.2.0], ontology [0.1.1], stage-grid [0.1.1] - 2026-10-18
+
+Class views: the records of chosen ontology classes and the links between them.
+
+### Added
+
+- knowledge-graph: `graph.mjs build --classes <class,class>`, or `--view <name>` for a view named under `views` in the graph map, draws only the records of those classes (and of classes that extend them) and the links between them, one lane per class, beside the whole graph. `graph.mjs views` lists the named views. An identifier scheme may name a `class`, so two classes can share a role. See `skills/knowledge-graph/CHANGELOG.md`.
+- The README, the command reference and the examples document class views.
+
+### Changed
+
+- ontology: its tasks point to class views for seeing records of chosen classes.
+- stage-grid: its rules say to bind the whole work graph, never a class view.
+
 ## ontology [0.1.0], knowledge-graph [0.1.0] - 2026-10-18
 
 The work graph joins the bundle, so the stage grid and the graph it reads ship together.

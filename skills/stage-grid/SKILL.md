@@ -5,7 +5,7 @@ license: CC-BY-4.0 AND Apache-2.0. Content under CC BY 4.0, code under Apache-2.
 compatibility: Node 18 or newer. No npm packages and no other skill. Reads a work graph in the knowledge-graph contract (references/data-contract.md), which any tool may write; the knowledge-graph skill is one.
 metadata:
   author: dermot-obrien
-  version: "0.1.0"
+  version: "0.1.1"
   homepage: https://github.com/dermot-obrien/delivery-planning
   x-skill-requires: ""
 ---
@@ -79,5 +79,6 @@ Deep links open a panel: `#stage:R3`, `#lane:LN-1`, `#epic:EP-1`, `#epic:EP-1/EP
 ## Rules
 
 - The records are the source. Never hand-edit `stage-grid-data.js`; fix the record or the configuration and rebuild.
+- Bind the whole work graph, never a knowledge-graph class view (`<out>/<view>/graph.json`). A view drops the periods, increments and deliverables the grid places.
 - A warning names a lane, stage or group the data does not have. Report it; don't build around it.
 - Colours and wording belong to the workspace's configuration. The app's defaults are neutral.
