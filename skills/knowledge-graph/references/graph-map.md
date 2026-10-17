@@ -35,7 +35,7 @@ A list. Each entry reads one file of records:
 | `select` | Dotted path to the list of records in the file, such as `work_item` or `data.items` |
 | `where` | Only records whose fields equal these values: `{"work_item_level": "epic"}`, a list of allowed values, or `"*"` for present |
 | `role` | The role these records play. Without it, the role is guessed from `idSchemes`, else `other` |
-| `class` | The class, when it differs from the role's mapping (capability areas playing the capability role, say) |
+| `class` | The class, when it differs from the role's mapping (capability areas playing the capability role, say). Without it, a matching identifier scheme's `class` for the same role, else the role's mapping |
 | `id` | The identifier field. Default `id` |
 | `label` | A field, or a template such as `"{id} {name}"`. Default `title`, then `name` |
 | `url` | A field holding the record's page, absolute or relative to the site base |
@@ -65,7 +65,9 @@ How to tell an identifier's role from its shape. Either inline:
 "idSchemes": {"schemes": [{"pattern": "^EP-[0-9]+$", "role": "epic"}]}
 ```
 
-or from a register: `{"file": "identifier-schemes.csv", "prefixColumn": "prefix", "patternColumn": "pattern", "roles": {"EP": "epic", "PAT": "pattern"}}`. The first matching pattern wins.
+A scheme may add `class`, for identifiers of one role but different classes: `{"pattern": "^SBB-[0-9]+", "role": "building-block", "class": "mo:SBB"}` types a solution building block, and a stub of one, apart from an architecture building block. It applies only when the record's role is the scheme's role.
+
+Or from a register: `{"file": "identifier-schemes.csv", "prefixColumn": "prefix", "patternColumn": "pattern", "roles": {"EP": "epic", "PAT": "pattern"}}`. The first matching pattern wins.
 
 ## links
 
@@ -82,6 +84,25 @@ or from a register: `{"file": "identifier-schemes.csv", "prefixColumn": "prefix"
 | `focus` | The identifier the page opens on. Without it, everything is shown |
 | `depth` | Hops from the focus, 0 for everything. Default 2 |
 | `hide` | Roles hidden until ticked in the Roles tab |
+
+## views
+
+Named class views, built with `graph.mjs build --view <name>`. Each shows the records of its classes and the links between them, one lane per class:
+
+```json
+"views": {
+  "abb-sbb": {"title": "Which solution building blocks realise which architecture building blocks", "classes": ["mo:ABB", "mo:SBB"]},
+  "delivery": {"classes": ["delivery:Epic", "delivery:Story"], "focus": "EP-901", "depth": 1}
+}
+```
+
+| Key | Meaning |
+|---|---|
+| `classes` | The classes, as the ontology skill accepts them. A record is shown when its class is one of these or extends one |
+| `title` | The page's title. Default: the map's title and the classes' names |
+| `focus`, `depth`, `hide` | As in `view`. Default: everything shown |
+
+`graph.mjs build --classes a,b` builds the same thing without naming it. Only links directly between two shown records are drawn; a link through a record of another class is not.
 
 ## predicates
 

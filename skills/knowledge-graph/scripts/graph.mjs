@@ -8,6 +8,11 @@
  *   node graph.mjs build [--map file] [--out dir] [--json]   graph.json and index.html
  *   node graph.mjs gaps  [--map file] [--json]               identifiers with no record or no page
  *   node graph.mjs show <id> [--map file]                    one node and its links
+ *   node graph.mjs views [--map file]                        the views the map names
+ *
+ * Each command takes --classes a,b (records of those classes and the links between them)
+ * or --view <name> (a view the map names). A view is written to <out>/<name>/, beside the
+ * whole graph rather than over it.
  *
  * --map and --out default to [suite.knowledge-graph] map and out in
  * .agents/skill-bindings.toml. Run from the workspace root.
@@ -17,7 +22,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import {build} from './lib/build.mjs';
+import {build, resolveView} from './lib/build.mjs';
 import {render} from './lib/render.mjs';
 import {readBindings, boundPath} from './lib/bindings.mjs';
 
@@ -32,7 +37,8 @@ function parseArgs(argv) {
   return out;
 }
 
-const USAGE = 'usage: graph.mjs build [--map file] [--out dir] [--json] [--strict] | gaps [--map file] [--json] | show <id> [--map file]';
+const USAGE = 'usage: graph.mjs build [--map file] [--out dir] [--json] [--strict] | gaps [--map file] [--json] | show <id> [--map file] | views [--map file]' +
+  '\n  any command: --classes <class,class> | --view <name>';
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
@@ -44,11 +50,27 @@ async function main() {
     console.error(mapFile ? `${mapFile}: not found` : 'No graph map: bind [suite.knowledge-graph] map, or pass --map.');
     return 2;
   }
-  const graph = await build(mapFile, {root: process.cwd()});
+  const map = JSON.parse(fs.readFileSync(mapFile, 'utf-8'));
+  if (cmd === 'views') {
+    const views = Object.entries(map.views || {});
+    if (!views.length) console.log('The map names no views. Add them under "views", or pass --classes.');
+    for (const [name, v] of views) console.log(`${name.padEnd(20)} ${(v.classes || []).join(', ')}${v.title ? `  (${v.title})` : ''}`);
+    return 0;
+  }
+  const classes = typeof args.classes === 'string' ? args.classes.split(',').map((c) => c.trim()).filter(Boolean) : [];
+  if (args.classes !== undefined && !classes.length) { console.error('--classes needs a comma-separated list of classes, such as mo:ABB,mo:SBB'); return 2; }
+  let selection;
+  try { selection = resolveView(map, {view: args.view, classes}); } catch (e) { console.error(e.message); return 2; }
+  const graph = await build(mapFile, {root: process.cwd(), view: args.view, classes});
   for (const w of graph.meta.warnings) console.error(`warning: ${w}`);
 
+  if (selection && !graph.nodes.length) {
+    console.error(`No records of ${selection.classes.join(', ')}: nothing to draw. List the classes with the ontology skill, and check the map's roles and sources.`);
+    return 1;
+  }
   if (cmd === 'build') {
-    const out = args.out ? path.resolve(args.out) : b.out ? boundPath(b, b.out) : path.resolve('knowledge-graph');
+    let out = args.out ? path.resolve(args.out) : b.out ? boundPath(b, b.out) : path.resolve('knowledge-graph');
+    if (selection && !args.out) out = path.join(out, selection.name);
     fs.mkdirSync(out, {recursive: true});
     fs.writeFileSync(path.join(out, 'graph.json'), JSON.stringify(graph, null, 1));
     if (!args.json) fs.writeFileSync(path.join(out, 'index.html'), render(graph));

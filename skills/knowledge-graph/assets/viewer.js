@@ -3,7 +3,8 @@
 //
 // The knowledge graph viewer. Reads window.GRAPH ({meta, nodes, links}) and draws it as a
 // force layout pulled into lanes (Why, What, When, Delivery, Design), with a detail panel,
-// role toggles and a list of gaps. Deep link with #focus=<id>&depth=<n>.
+// role toggles and a list of gaps. Deep link with #focus=<id>&depth=<n>. A class view
+// (meta.classView) lays out one lane per chosen class, and colours and toggles by class.
 
 (function () {
   'use strict';
@@ -19,7 +20,11 @@
   const degree = (id) => outs.get(id).length + ins.get(id).length;
 
   const roleOf = (n) => meta.roles[n.role] || meta.roles.other;
-  const color = (n) => `var(--c${roleOf(n).color})`;
+  const classes = meta.classView ? new Map(meta.classView.map((c) => [c.key, {...c, lane: c.key, shape: c.shape || 'circle'}])) : null;
+  // What a node is drawn as: its class in a class view, else its role.
+  const kindOf = (n) => (classes && classes.get(n.view)) || roleOf(n);
+  const keyOf = (n) => (classes ? n.view : n.role);
+  const color = (n) => `var(--c${kindOf(n).color})`;
   const laneIndex = new Map(meta.lanes.map((l, i) => [l.id, i]));
 
   // State.
@@ -45,10 +50,10 @@
 
   let sim = null, nodeSel = null, linkSel = null, current = {nodes: [], links: []};
   const W = () => $('#stage').clientWidth, H = () => $('#stage').clientHeight;
-  const laneX = (n) => { const i = laneIndex.get(roleOf(n).lane) ?? 0; return (i + 0.5) * W() / meta.lanes.length; };
+  const laneX = (n) => { const i = laneIndex.get(kindOf(n).lane) ?? 0; return (i + 0.5) * W() / meta.lanes.length; };
 
   function visibleSet() {
-    const ok = (n) => !hidden.has(n.role);
+    const ok = (n) => !hidden.has(keyOf(n));
     if (!focus || depth === 0) return new Set(G.nodes.filter(ok).map((n) => n.id));
     const seen = new Set([focus]);
     let frontier = [focus];
@@ -86,9 +91,9 @@
       return g;
     });
     nodeSel.classed('stub', (d) => Boolean(d.stub)).classed('sel', (d) => d.id === selected);
-    nodeSel.select('path').attr('d', (d) => d3.symbol(SHAPES[roleOf(d).shape] || d3.symbolCircle, size(d))()).attr('fill', color);
+    nodeSel.select('path').attr('d', (d) => d3.symbol(SHAPES[kindOf(d).shape] || d3.symbolCircle, size(d))()).attr('fill', color);
     nodeSel.select('text').attr('x', (d) => Math.sqrt(size(d)) / 1.6 + 4).text((d) => (d.label && d.label !== d.id ? `${d.id} ${truncate(d.label, 34)}` : d.id));
-    nodeSel.select('title').text((d) => `${d.id}\n${d.label}\n${roleOf(d).label}${d.stub ? ' (no record)' : ''}`);
+    nodeSel.select('title').text((d) => `${d.id}\n${d.label}\n${kindOf(d).label}${d.stub ? ' (no record)' : ''}`);
     nodeSel.on('click', (e, d) => { e.stopPropagation(); select(d.id); })
       .on('dblclick', (e, d) => { e.stopPropagation(); setFocus(d.id); })
       .on('mouseenter', (e, d) => highlight(d.id)).on('mouseleave', () => highlight(selected))
@@ -99,7 +104,7 @@
     if (sim) sim.stop();
     const strength = nodes.length > 400 ? -40 : nodes.length > 120 ? -120 : -260;
     sim = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id((d) => d.id).distance(50).strength((l) => (roleOf(l.source).lane === roleOf(l.target).lane ? 0.3 : 0.04)))
+      .force('link', d3.forceLink(links).id((d) => d.id).distance(50).strength((l) => (kindOf(l.source).lane === kindOf(l.target).lane ? 0.3 : 0.04)))
       .force('charge', d3.forceManyBody().strength(strength).distanceMax(400))
       .force('x', d3.forceX(laneX).strength(0.7))
       .force('y', d3.forceY(H() / 2).strength(nodes.length > 400 ? 0.03 : 0.05))
@@ -186,7 +191,7 @@
       : `<div class="cls">Role ${esc(r.label)}, not mapped to a class of this workspace's ontology.</div>`;
     const props = Object.entries(n.props || {}).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(truncate(String(v), 400))}</dd>`).join('');
     pane.innerHTML = `
-      <span class="role-badge"><span class="dot" style="background:${color(n)}"></span>${esc(r.label)}${n.stub ? ' · no record' : ''}</span>
+      <span class="role-badge"><span class="dot" style="background:${color(n)}"></span>${esc(kindOf(n).label)}${n.stub ? ' · no record' : ''}</span>
       <h2>${esc(n.label)}</h2>
       <div class="id">${esc(n.id)}${n.source && n.source !== 'value' ? ' · from ' + esc(n.source) : ''}</div>
       ${cls}
@@ -199,6 +204,7 @@
   }
 
   function showRoles() {
+    if (classes) return showClasses();
     const rows = Object.entries(meta.roles).filter(([, r]) => r.count || r.mapping).map(([key, r]) => {
       const m = r.mapping;
       const mapText = m && m.relation ? `${m.relation} <code>${esc(m.compact)}</code>${m.note ? ' · ' + esc(m.note) : ''}` : m && m.note ? esc(m.note) : 'not mapped to a class';
@@ -208,6 +214,15 @@
     });
     const warnings = (meta.warnings || []).map((w) => `<div class="warn">${esc(w)}</div>`).join('');
     $('#pane-roles').innerHTML = `<p class="empty">Each role the graph lays out, and the class of this workspace's ontology that plays it. Untick to hide.</p>${rows.join('')}${warnings ? '<h3>Build warnings</h3>' + warnings : ''}`;
+    $('#pane-roles').querySelectorAll('input[data-role]').forEach((cb) => cb.addEventListener('change', () => { cb.checked ? hidden.delete(cb.dataset.role) : hidden.add(cb.dataset.role); draw(); }));
+  }
+
+  function showClasses() {
+    const rows = [...classes.values()].map((c) => `<label class="role-row"><input type="checkbox" data-role="${esc(c.key)}" ${hidden.has(c.key) ? '' : 'checked'}>
+        <span><span class="dot" style="background:var(--c${c.color})"></span> ${esc(c.label)}</span><span class="empty">${c.count}</span>
+        <span class="map"><code>${esc(c.key)}</code>${c.description ? ' · ' + esc(c.description) : ''}</span></label>`);
+    const warnings = (meta.warnings || []).map((w) => `<div class="warn">${esc(w)}</div>`).join('');
+    $('#pane-roles').innerHTML = `<p class="empty">The classes this view shows, one lane each, with the records of each and the links between them. Untick to hide.</p>${rows.join('')}${warnings ? '<h3>Build warnings</h3>' + warnings : ''}`;
     $('#pane-roles').querySelectorAll('input[data-role]').forEach((cb) => cb.addEventListener('change', () => { cb.checked ? hidden.delete(cb.dataset.role) : hidden.add(cb.dataset.role); draw(); }));
   }
 
@@ -236,6 +251,7 @@
 
   // Wiring.
   $('#title').textContent = meta.title;
+  if (classes) document.querySelector('.tabs button[data-tab=roles]').textContent = 'Classes';
   document.title = meta.title;
   document.querySelectorAll('.tabs button').forEach((b) => b.addEventListener('click', () => tab(b.dataset.tab)));
   document.querySelectorAll('#depth button').forEach((b) => b.addEventListener('click', () => { depth = Number(b.dataset.d); draw(); writeHash(); }));
