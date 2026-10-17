@@ -3,8 +3,8 @@
 
 An epic has two faces, kept apart on purpose. Its folder, under the `epicsDir` binding, is
 written by hand and lives across quarters: framing, scope decisions and discovery. Its card,
-under the `cardsDir` binding, is a view generated for one quarter: the rung movement, the
-deliverables with their types, rungs, points, states and approvals, and budget against planned.
+under the `cardsDir` binding, is a view generated for one quarter: the stage movement, the
+deliverables with their types, stages, points, states and approvals, and budget against planned.
 With the feature-request layer bound, it also shows the requests the epic takes on and the
 products and platforms they support. The card links to the folder and never repeats it.
 
@@ -14,6 +14,7 @@ budget is the figure the validation reports.
   build(q, bind, label) -> {path: text}
   write(files, check) -> the paths that were stale
 """
+from stages import flow_stage, product_stages
 import io
 import os
 import re
@@ -88,7 +89,7 @@ def card(item, n, q, bind, label, register, base, cards_dir, layer=None):
     derived = q.distribution.get(item['id'], 0.0)
     recorded = item.get('budget_points')
     flows = item.get('flows') or []
-    reached = any(fl.get('rung_reached') for fl in flows)
+    reached = any(flow_stage(fl, 'reached') for fl in flows)
     s = [frontmatter('%s card, %s' % (item['id'], label), '%s card' % item['id'],
                      position(item, n), bind, q.slug),
          '# %s card, %s\n\n' % (item['id'], label),
@@ -107,8 +108,8 @@ def card(item, n, q, bind, label, register, base, cards_dir, layer=None):
     if flows:
         head = ['Flow', 'What it does', 'From', 'To'] + (['Reached'] if reached else [])
         s.append(md_table(head, [
-            [fl.get('flow') or '', fl.get('description') or '', fl.get('rung_from') or '',
-             fl.get('rung_to') or ''] + ([fl.get('rung_reached') or ''] if reached else [])
+            [fl.get('flow') or '', fl.get('description') or '', flow_stage(fl, 'from') or '',
+             flow_stage(fl, 'to') or ''] + ([flow_stage(fl, 'reached') or ''] if reached else [])
             for fl in flows]))
     else:
         s.append('No flows are recorded, so the movement is unstated.\n')
@@ -118,10 +119,10 @@ def card(item, n, q, bind, label, register, base, cards_dir, layer=None):
         for d in ds:
             t = register.get((d.get('deliverable_id') or '').strip(), {})
             rows.append(['%s %s' % (d.get('id') or '', d.get('name') or ''),
-                         d.get('deliverable_id') or '', (t.get('rung') or '').strip(),
+                         d.get('deliverable_id') or '', ', '.join(product_stages(d, register)),
                          pts(product_points(d, base)), d.get('state') or '',
                          d.get('approval') or 'draft'])
-        s.append(md_table(['Deliverable', 'Type', 'Evidences', 'Points', 'State', 'Approval'],
+        s.append(md_table(['Deliverable', 'Type', 'Stage', 'Points', 'State', 'Approval'],
                           rows))
     else:
         s.append('No deliverables are named yet.\n')
@@ -179,11 +180,11 @@ def requests_part(item, reqs, products, story_map):
 def grid(epics, summary, q, bind, label):
     s = [frontmatter('%s stage grid' % label, 'Stage grid and cards', 1, bind, q.slug),
          '# %s stage grid\n\n' % label,
-         'Where each flow in scope starts on the definition ladder, and the rung its epic is '
+         'Where each flow in scope starts on the definition ladder, and the stage its epic is '
          'committed to reach. Generated from the planning model.\n\n']
-    reached = any(fl.get('rung_reached') for e in epics for fl in e.get('flows') or [])
-    rows = [[e.get('lane') or '', fl.get('flow') or '', fl.get('rung_from') or '',
-             fl.get('rung_to') or ''] + ([fl.get('rung_reached') or ''] if reached else [])
+    reached = any(flow_stage(fl, 'reached') for e in epics for fl in e.get('flows') or [])
+    rows = [[e.get('lane') or '', fl.get('flow') or '', flow_stage(fl, 'from') or '',
+             flow_stage(fl, 'to') or ''] + ([flow_stage(fl, 'reached') or ''] if reached else [])
             + ['[%s](./%s.md)' % (e['id'], e['id'])]
             for e in epics for fl in e.get('flows') or []]
     if rows:

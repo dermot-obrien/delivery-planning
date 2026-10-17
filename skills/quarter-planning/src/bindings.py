@@ -42,7 +42,7 @@ PATH_KEYS = ("sources", "register", "basis", "calendar", "resourcing", "quarterD
 
 # Paths a workspace may declare to opt in to more. Each is optional, and a workspace that
 # declares none of them validates exactly as before.
-#   ladder        the definition ladder, a CSV of rung,name,description in ascending order
+#   ladder        the definition ladder, a CSV of stage,name,description in ascending order (rung is read too)
 #   epicsDir      the folder holding each epic's hand-written home folder
 #   cardsDir      where the generated epic cards and the stage grid are written
 #   workItemsDir  AAW work items, read for epics whose progress.yaml names this quarter, and

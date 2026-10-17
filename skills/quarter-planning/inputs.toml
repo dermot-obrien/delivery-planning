@@ -114,11 +114,11 @@ workspace that names its stages differently still gets the same rules."""
 [inputs.options.ladder]
 type = "path"
 required = false
-description = """The definition ladder, as a CSV with the columns rung, name and description,
-one row per rung in ascending order, least defined first. Bound, it turns an epic's framing
-into a check: a flow's rung_from and rung_to must be rungs the ladder names, a movement may
-not go down it, and the register's optional `rung` column says which rung each product type
-evidences. Unbound, flows are reported as recorded and nothing is judged."""
+description = """The definition ladder, as a CSV with the columns stage, name and description,
+one row per stage in ascending order, least defined first. Bound, it turns an epic's framing
+into a check: a flow's stage_from and stage_to must be stages the ladder names, a movement may
+not go down it, and the register's optional `stages` column lists the stages each product type
+can be produced at. Unbound, flows are reported as recorded and nothing is judged."""
 
 [inputs.options.epicsDir]
 type = "path"

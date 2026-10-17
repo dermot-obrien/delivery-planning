@@ -1,0 +1,43 @@
+{
+  "title": "Example work graph",
+  "roles": {
+    "epic": {"exactMatch": "delivery:Epic"},
+    "story": {"exactMatch": "delivery:Story"},
+    "initiative": {"exactMatch": "work:Initiative"},
+    "increment": {"exactMatch": "delivery:CapabilityIncrement"},
+    "pattern": {"exactMatch": "delivery:Pattern"},
+    "capability": {"note": "no class yet; the capability register is a list"},
+    "deliverable": {"note": "epic deliverables are records inside each epic"},
+    "period": {"note": "the period label on each epic"}
+  },
+  "idSchemes": {"schemes": [
+    {"pattern": "^EP-[0-9]+$", "role": "epic"},
+    {"pattern": "^EP-[0-9]+-A[0-9]+$", "role": "story"},
+    {"pattern": "^EP-[0-9]+-D[0-9]+$", "role": "deliverable"},
+    {"pattern": "^PAT-[0-9]+$", "role": "pattern"},
+    {"pattern": "^INC-[0-9]+$", "role": "increment"},
+    {"pattern": "^CAP-[0-9]+$", "role": "capability"},
+    {"pattern": "^IN-[0-9]+$", "role": "initiative"}
+  ]},
+  "sources": [
+    {"file": "records/epics.json", "select": "epics", "role": "epic", "label": "title", "url": "route",
+     "props": ["period"],
+     "links": [
+       {"field": "period", "p": "scheduledIn", "role": "period", "create": true},
+       {"field": "initiative_id", "p": "partOf"},
+       {"field": "refines_pattern_ids", "p": "refines"},
+       {"field": "advances_increment_ids", "p": "advances"},
+       {"field": "depends_on_work_item_ids", "p": "dependsOn"}
+     ],
+     "children": [{"select": "deliverables", "role": "deliverable", "label": "name", "props": ["type"], "parent": {"p": "produces"}}]},
+    {"file": "records/stories.csv", "role": "story", "label": "title",
+     "links": [{"field": "work_item_id", "p": "partOf"}, {"field": "produces", "p": "produces"}]},
+    {"file": "records/registers.json", "select": "initiatives", "role": "initiative", "label": "name"},
+    {"file": "records/registers.json", "select": "increments", "role": "increment", "label": "statement",
+     "links": [{"field": "capability_id", "p": "partOf"}]},
+    {"file": "records/registers.json", "select": "capabilities", "role": "capability", "label": "name"},
+    {"file": "records/registers.json", "select": "patterns", "role": "pattern", "label": "name", "url": "route"}
+  ],
+  "links": {"baseUrl": "https://catalogue.example.org/"},
+  "view": {"focus": "2027-Q1", "depth": 2}
+}

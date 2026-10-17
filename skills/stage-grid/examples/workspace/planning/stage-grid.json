@@ -1,0 +1,50 @@
+{
+ "$comment": "An invented stage grid. Stages come from registers/ladder.csv. Each deliverable is for one stage: its own, else its type's when the type allows only one.",
+ "title": "How the invented quarter advances the estate",
+ "subtitle": "Each deliverable sits against the stage it builds towards.",
+ "period": "2030-Q1",
+ "ladder": "../registers/ladder.csv",
+ "epicFilter": {
+  "work_item_level": "epic"
+ },
+ "strap": "What we are delivering this quarter",
+ "boundary": {
+  "mover": "architecture and forums",
+  "title": "Who moves it",
+  "label": "architecture can take a capability up to Designed, and no further"
+ },
+ "placement": {
+  "exclude": [
+   "EP-2-D2"
+  ]
+ },
+ "labels": {
+  "EP-1-D3": "Intake pattern"
+ },
+ "lanes": [
+  {
+   "lane": "LN-1",
+   "groups": [
+    {
+     "label": "Physical patterns on A and B",
+     "deliverables": [
+      "EP-1-D4",
+      "EP-1-D5"
+     ]
+    }
+   ],
+   "outcomes": [
+    {
+     "status": "Delivered this quarter",
+     "text": "Orders taken on the new channel",
+     "stage": "R6"
+    }
+   ]
+  },
+  {
+   "lane": "LN-2",
+   "label": "Tracking"
+  }
+ ],
+ "note": "Invented data. No identifier here refers to anything real."
+}

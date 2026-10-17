@@ -11,8 +11,8 @@ planned_points: 4
 lane: Second lane
 flows:
   - flow: Serve
-    rung_from: R2
-    rung_to: R3
+    stage_from: R2
+    stage_to: R3
 approval: draft
 deliverables:
   - id: WI-002-D1

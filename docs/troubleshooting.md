@@ -108,12 +108,12 @@ When sections 1 to 4 fail, the report ends `Re-run with --apply to write the der
 
 | Message | Do |
 |---|---|
-| `X flow F records no rung_from` (or `rung_to`) | Record both rungs |
-| `X flow F records rung_to R, which the ladder does not name. It names ...` | Use a rung the ladder names, or add it to the ladder |
-| `X flow F moves down the ladder, from A to B. ...` | Fix the rungs. A rung lost is recorded at close, not planned |
-| `X flow F records rung_reached R, which the ladder does not name` | Use a rung the ladder names |
+| `X flow F records no stage_from` (or `stage_to`) | Record both stages |
+| `X flow F records stage_to R, which the ladder does not name. It names ...` | Use a stage the ladder names, or add it to the ladder |
+| `X flow F moves down the ladder, from A to B. ...` | Fix the stages. A stage lost is recorded at close, not planned |
+| `X flow F records stage_reached R, which the ladder does not name` | Use a stage the ladder names |
 | `WARNING X records no lane, so the capability area it advances is unstated` | Set `lane` |
-| `WARNING X commits a flow to R but names no product whose type evidences R, ...` | Name a product of a type whose register `rung` is R, or lower the commitment |
+| `WARNING X commits a flow to R but names no product for stage R, ...` | Name a product for stage R (its own `stage`, or a type whose `stages` include R), or lower the commitment |
 
 `Names no flows:` and `Advances no recorded criterion:` are reported, not failed.
 

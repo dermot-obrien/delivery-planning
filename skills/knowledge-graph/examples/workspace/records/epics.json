@@ -1,0 +1,12 @@
+{"epics": [
+  {"id": "EP-901", "title": "Order intake on the new channel", "period": "2027-Q1", "initiative_id": "IN-01",
+   "refines_pattern_ids": ["PAT-910"], "advances_increment_ids": ["INC-01"], "route": "epics/ep-901/",
+   "deliverables": [
+     {"id": "EP-901-D1", "name": "Intake pattern for the new channel", "type": "pattern"},
+     {"id": "EP-901-D2", "name": "Quarter plan for order intake", "type": "plan"}
+   ]},
+  {"id": "EP-902", "title": "Order status for customers", "period": "2027-Q1", "initiative_id": "IN-01",
+   "depends_on_work_item_ids": ["EP-901"], "refines_pattern_ids": ["PAT-911"], "advances_increment_ids": ["INC-02"],
+   "deliverables": [{"id": "EP-902-D1", "name": "Status notification design", "type": "design"}]},
+  {"id": "EP-903", "title": "Returns triage", "period": "2027-Q2", "initiative_id": "IN-02", "refines_pattern_ids": ["PAT-999"]}
+]}

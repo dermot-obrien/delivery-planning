@@ -18,3 +18,8 @@ cardsDir     = "../planning/{quarter}/cards"
 workItemsDir = "../work-items"
 siteUrl      = "http://localhost:3000/docs/"
 externalRefSystem = "tracker"
+
+[suite.stage-grid]
+# Shape only: the grid is built per quarter, so {quarter} defers the files to the run.
+graph  = "../planning/{quarter}/graph.json"
+config = "../planning/{quarter}/stage-grid.json"

@@ -17,3 +17,6 @@ __pycache__/
 dist/
 .tmp/
 *.log
+
+# Built by the stage-grid worked example
+skills/stage-grid/examples/workspace/build/

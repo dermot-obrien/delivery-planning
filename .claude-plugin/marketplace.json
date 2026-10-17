@@ -11,7 +11,7 @@
       "source": "./",
       "strict": false,
       "description": "Plan a quarter in two stages: derive a budget of points from the calendar and resourcing, allocate it to epics, then elaborate deliverables and roll their sizes up, with integrity checks, epic cards and links to epic and story pages.",
-      "version": "3.6.0",
+      "version": "3.7.0",
       "author": {
         "name": "Dermot O'Brien",
         "url": "https://github.com/dermot-obrien"
@@ -29,6 +29,88 @@
       "category": "productivity",
       "skills": [
         "./skills/quarter-planning"
+      ]
+    },
+    {
+      "name": "stage-grid",
+      "source": "./",
+      "strict": false,
+      "description": "Build a period's stage grid as a single-page app: capability lanes against the stages of the definition ladder, each cell the deliverables that build a lane towards a stage, every block clickable, published with a static site or opened from disk.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Dermot O'Brien",
+        "url": "https://github.com/dermot-obrien"
+      },
+      "homepage": "https://github.com/dermot-obrien/delivery-planning",
+      "repository": "https://github.com/dermot-obrien/delivery-planning",
+      "license": "CC-BY-4.0 AND Apache-2.0",
+      "keywords": [
+        "planning",
+        "capability",
+        "ladder",
+        "stage-grid",
+        "agent-skill"
+      ],
+      "category": "productivity",
+      "skills": [
+        "./skills/stage-grid"
+      ]
+    },
+    {
+      "name": "ontology",
+      "source": "./",
+      "strict": false,
+      "description": "Read a workspace's layered ontology of JSON Schema modules: list classes, show what a class extends and links to, expand short names to class IRIs, and check every $ref resolves.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Dermot O'Brien",
+        "url": "https://github.com/dermot-obrien"
+      },
+      "homepage": "https://github.com/dermot-obrien/delivery-planning",
+      "repository": "https://github.com/dermot-obrien/delivery-planning",
+      "license": "CC-BY-4.0 AND Apache-2.0",
+      "keywords": [
+        "ontology",
+        "json-schema",
+        "iri",
+        "metamodel",
+        "agent-skill"
+      ],
+      "category": "documentation",
+      "skills": [
+        "./skills/ontology"
+      ]
+    },
+    {
+      "name": "knowledge-graph",
+      "source": "./",
+      "strict": false,
+      "description": "Build a clickable knowledge graph of a workspace's work (epics, stories, deliverables, capabilities and increments, patterns, products) from its own records, typed by its own ontology through a graph map, as one HTML page that opens from disk, with a list of broken links.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Dermot O'Brien",
+        "url": "https://github.com/dermot-obrien"
+      },
+      "homepage": "https://github.com/dermot-obrien/delivery-planning",
+      "repository": "https://github.com/dermot-obrien/delivery-planning",
+      "license": "CC-BY-4.0 AND Apache-2.0",
+      "keywords": [
+        "knowledge-graph",
+        "traceability",
+        "planning",
+        "ontology",
+        "d3",
+        "agent-skill"
+      ],
+      "category": "documentation",
+      "skills": [
+        "./skills/knowledge-graph"
+      ],
+      "dependencies": [
+        {
+          "name": "ontology",
+          "version": "^0.1.0"
+        }
       ]
     }
   ]

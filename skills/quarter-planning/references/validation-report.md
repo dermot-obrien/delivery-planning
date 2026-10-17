@@ -16,7 +16,7 @@ One report, read top down, because that is the only direction the arithmetic run
 | 5 Elaboration | Named products against the budget each epic was given |
 | 6 Load | Each person's owned products against the capacity they brought |
 | 7 Approval | How far the plan, each committed epic and each of its products have been approved, and what is ready for approval |
-| 8 Framing | Each committed epic's lane and flows, and whether its products evidence the rungs it commits to |
+| 8 Framing | Each committed epic's lane and flows, and whether it names products for the stages it commits to |
 | 9 Close | Committed against reached per flow, planned against actual per product, and a recalibration hint per type. Only once recorded |
 | 10 Feature requests | The request register's rules, and the requests each committed epic takes on: ready, scored and cited by stories. Only with `requests` bound |
 
@@ -29,7 +29,7 @@ passes. Positive is under, negative is over, in both. Section 5 also enforces th
 rules, which are integrity: a product whose type is not in the register, a type the register
 does not mark used, or an explicit `points` with no `points_override_reason` fails the run.
 Section 7 is integrity again, but only for claims: an approval the records beneath it do not
-support fails the run. Section 8 fails only on a rung the ladder does not name or a movement
+support fails the run. Section 8 fails only on a stage the ladder does not name or a movement
 down it, and warns on the rest. Warnings are printed where they arise and never fail the run.
 
 ## Writing the derived budgets

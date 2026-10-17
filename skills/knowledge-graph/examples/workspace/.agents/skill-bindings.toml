@@ -1,0 +1,11 @@
+# An invented workspace for the knowledge-graph example. Paths are relative to this file.
+
+[suite.ontology]
+modules = [
+  "../ontology/work.schema.json",
+  "../ontology/delivery.schema.json",
+]
+
+[suite.knowledge-graph]
+map = "../graph-map.json"
+out = "../build/graph"

@@ -154,15 +154,15 @@ class TestRegisterRules(Workspace):
 
 class TestFraming(Workspace):
 
-    def test_unknown_rung_fails(self):
-        self.edit(self.MODEL, 'rung_to: R1', 'rung_to: R9')
+    def test_unknown_stage_fails(self):
+        self.edit(self.MODEL, 'stage_to: R1', 'stage_to: R9')
         code, out = self.run_quarter()
         self.assertEqual(code, 1, out)
-        self.assertIn('EP-001 flow Intake records rung_to R9, which the ladder does not name',
+        self.assertIn('EP-001 flow Intake records stage_to R9, which the ladder does not name',
                       out)
 
     def test_downward_movement_fails(self):
-        self.edit(self.MODEL, 'rung_from: R1\n    rung_to: R3', 'rung_from: R3\n    rung_to: R1')
+        self.edit(self.MODEL, 'stage_from: R1\n    stage_to: R3', 'stage_from: R3\n    stage_to: R1')
         code, out = self.run_quarter()
         self.assertEqual(code, 1, out)
         self.assertIn('EP-001 flow Process moves down the ladder, from R3 to R1', out)
@@ -179,13 +179,40 @@ class TestFraming(Workspace):
         self.edit(self.MODEL, 'planned_points: 10', 'planned_points: 8')
         code, out = self.run_quarter()
         self.assertEqual(code, 0, out)
-        self.assertIn('WARNING EP-001 commits a flow to R1 but names no product whose type '
-                      'evidences R1', out)
+        self.assertIn('WARNING EP-001 commits a flow to R1 but names no product for stage R1', out)
+
+    def test_a_type_can_serve_several_stages(self):
+        # The plan document becomes a type that can be produced at R1 or R2, so the epic's
+        # plan is for R1 and the R1 target is met again.
+        self.edit(self.MODEL, 'deliverable_id: capability-area', 'deliverable_id: plan-document')
+        self.edit(self.MODEL, 'planned_points: 10', 'planned_points: 8')
+        self.edit('registers/deliverable-types.csv', 'plan-document,Plan document,,1', 'plan-document,Plan document,R1;R2,1')
+        code, out = self.run_quarter()
+        self.assertEqual(code, 0, out)
+        self.assertNotIn('names no product for stage R1', out)
+
+    def test_a_product_records_its_own_stage(self):
+        self.edit(self.MODEL, 'deliverable_id: capability-area', 'deliverable_id: plan-document\n    stage: R1')
+        self.edit(self.MODEL, 'planned_points: 10', 'planned_points: 8')
+        code, out = self.run_quarter()
+        self.assertEqual(code, 0, out)
+        self.assertNotIn('names no product for stage R1', out)
+
+    def test_the_old_rung_names_still_read(self):
+        for path in (self.MODEL, 'work-items/WI-002/progress.yaml'):
+            text = self.read(path)
+            self.write(path, text.replace('stage_from:', 'rung_from:').replace('stage_to:', 'rung_to:'))
+        self.edit('registers/ladder.csv', 'stage,name,description', 'rung,name,description')
+        self.edit('registers/deliverable-types.csv', 'id,name,stages,', 'id,name,rung,')
+        self.edit(self.MODEL, 'rung_to: R1', 'rung_to: R9')
+        code, out = self.run_quarter()
+        self.assertEqual(code, 1, out)
+        self.assertIn('EP-001 flow Intake records stage_to R9, which the ladder does not name', out)
 
     def test_no_ladder_reports_without_judging(self):
         text = self.read(self.BINDINGS)
         self.write(self.BINDINGS, re.sub(r'(?m)^ladder\s*=.*\n', '', text))
-        self.edit(self.MODEL, 'rung_to: R1', 'rung_to: R9')
+        self.edit(self.MODEL, 'stage_to: R1', 'stage_to: R9')
         self.edit(self.MODEL, '  lane: Example lane\n', '')
         code, out = self.run_quarter()
         self.assertEqual(code, 0, out)
@@ -306,8 +333,8 @@ class TestBridge(Workspace):
   lane: Second lane
   flows:
   - flow: Serve
-    rung_from: R2
-    rung_to: R3
+    stage_from: R2
+    stage_to: R3
   budget_points: 9
   deliverables:
   - id: WI-002-D1
@@ -332,8 +359,8 @@ class TestBridge(Workspace):
 class TestClose(Workspace):
 
     def test_close_section(self):
-        self.edit(self.MODEL, 'rung_to: R1\n', 'rung_to: R1\n    rung_reached: R1\n')
-        self.edit(self.MODEL, 'rung_to: R3\n', 'rung_to: R3\n    rung_reached: R2\n')
+        self.edit(self.MODEL, 'stage_to: R1\n', 'stage_to: R1\n    stage_reached: R1\n')
+        self.edit(self.MODEL, 'stage_to: R3\n', 'stage_to: R3\n    stage_reached: R2\n')
         self.edit(self.MODEL, 'name: Example decision\n',
                   'name: Example decision\n    actual_points: 3\n')
         self.edit(self.MODEL, 'name: A smaller example decision\n',
@@ -348,7 +375,7 @@ class TestClose(Workspace):
         self.assertRegex(out, r'decision\s+2\s+2\.0\s+1\.00\s+2\.0')
 
     def test_close_leaves_files_alone(self):
-        self.edit(self.MODEL, 'rung_to: R1\n', 'rung_to: R1\n    rung_reached: R1\n')
+        self.edit(self.MODEL, 'stage_to: R1\n', 'stage_to: R1\n    stage_reached: R1\n')
         before = self.read(self.MODEL)
         self.run_quarter()
         self.assertEqual(before, self.read(self.MODEL))

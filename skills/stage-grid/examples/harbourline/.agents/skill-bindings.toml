@@ -1,0 +1,6 @@
+# The Harbourline Transit example. Paths are relative to this file.
+
+[suite.stage-grid]
+graph  = "../planning/graph.json"
+config = "../planning/stage-grid.json"
+out    = "../stage-grid"

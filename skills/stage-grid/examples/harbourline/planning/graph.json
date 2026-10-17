@@ -1,0 +1,713 @@
+{
+ "meta": {
+  "title": "Harbourline Transit work graph (invented)"
+ },
+ "nodes": [
+  {
+   "id": "2031-Q2",
+   "role": "period",
+   "label": "2031-Q2",
+   "props": {}
+  },
+  {
+   "id": "LN-TIX",
+   "role": "capability",
+   "label": "Ticketing",
+   "props": {
+    "description": "How riders pay: cards, phones and passes, at the gate and on the bus."
+   }
+  },
+  {
+   "id": "LN-JRN",
+   "role": "capability",
+   "label": "Journey planning",
+   "props": {
+    "description": "How riders find their way: routes, transfers and live arrival times."
+   }
+  },
+  {
+   "id": "LN-FLT",
+   "role": "capability",
+   "label": "Fleet telemetry",
+   "props": {
+    "description": "Where every vehicle is, and how it is running, every few seconds."
+   }
+  },
+  {
+   "id": "LN-ACC",
+   "role": "capability",
+   "label": "Step-free travel",
+   "props": {
+    "description": "Getting through the network without stairs: lifts, ramps and the routes between them."
+   }
+  },
+  {
+   "id": "IN-ORCA",
+   "role": "initiative",
+   "label": "Orca: the rider app and back office renewal",
+   "props": {}
+  },
+  {
+   "id": "T-NOTE",
+   "role": "deliverable-type",
+   "label": "Discovery note",
+   "props": {
+    "stages": "S1;S2"
+   }
+  },
+  {
+   "id": "T-CANVAS",
+   "role": "deliverable-type",
+   "label": "Framing canvas",
+   "props": {
+    "stages": "S2"
+   }
+  },
+  {
+   "id": "T-PAT",
+   "role": "deliverable-type",
+   "label": "Pattern",
+   "props": {
+    "stages": "S3;S4"
+   }
+  },
+  {
+   "id": "T-PHYS",
+   "role": "deliverable-type",
+   "label": "Physical pattern",
+   "props": {
+    "stages": "S4"
+   }
+  },
+  {
+   "id": "T-DEC",
+   "role": "deliverable-type",
+   "label": "Decision record",
+   "props": {
+    "stages": "S3;S4"
+   }
+  },
+  {
+   "id": "T-PILOT",
+   "role": "deliverable-type",
+   "label": "Pilot report",
+   "props": {
+    "stages": "S5"
+   }
+  },
+  {
+   "id": "T-PLAN",
+   "role": "deliverable-type",
+   "label": "Quarter plan",
+   "props": {
+    "stages": ""
+   }
+  },
+  {
+   "id": "PAT-T1",
+   "role": "pattern",
+   "label": "Account-based ticketing",
+   "props": {}
+  },
+  {
+   "id": "PAT-T2",
+   "role": "pattern",
+   "label": "Vehicle position stream",
+   "props": {}
+  },
+  {
+   "id": "PAT-T3",
+   "role": "pattern",
+   "label": "Step-free route graph",
+   "props": {}
+  },
+  {
+   "id": "INC-TIX-1",
+   "role": "increment",
+   "label": "Riders can tap on and off on the airport line, with the fare capped daily",
+   "props": {
+    "status": "pending"
+   }
+  },
+  {
+   "id": "INC-JRN-1",
+   "role": "increment",
+   "label": "Arrival predictions are within one minute for nine in ten arrivals on route 7",
+   "props": {
+    "status": "pending"
+   }
+  },
+  {
+   "id": "INC-ACC-1",
+   "role": "increment",
+   "label": "Every step-free route on the inner loop is in the route graph, with lift status",
+   "props": {
+    "status": "pending"
+   }
+  },
+  {
+   "id": "INC-FLT-1",
+   "role": "increment",
+   "label": "Every bus on the depot network sends its position at least every five seconds",
+   "props": {
+    "status": "pending"
+   }
+  },
+  {
+   "id": "HL-21",
+   "role": "epic",
+   "label": "Tap on, tap off",
+   "props": {
+    "key": "TRK-21",
+    "work_item_level": "epic",
+    "status": "in progress",
+    "approval": "approved",
+    "goal": "Let riders tap any contactless card or phone at the gate and pay the best fare automatically, with no ticket bought in advance.",
+    "budget_points": 18,
+    "planned_points": 21
+   }
+  },
+  {
+   "id": "HL-21-D1",
+   "role": "deliverable",
+   "label": "Fare rules riders actually hit, from a week of gate logs",
+   "props": {
+    "state": "approved",
+    "stage": "S2"
+   }
+  },
+  {
+   "id": "HL-21-D2",
+   "role": "deliverable",
+   "label": "Account-based ticketing pattern",
+   "props": {
+    "state": "drafted",
+    "stage": "S3"
+   }
+  },
+  {
+   "id": "HL-21-D3",
+   "role": "deliverable",
+   "label": "Account-based ticketing on the gate vendor's cloud",
+   "props": {
+    "state": "planned"
+   }
+  },
+  {
+   "id": "HL-21-D4",
+   "role": "deliverable",
+   "label": "Fare capping decision",
+   "props": {
+    "state": "planned",
+    "stage": "S4"
+   }
+  },
+  {
+   "id": "HL-21-D5",
+   "role": "deliverable",
+   "label": "Ticketing plan for 2031-Q2",
+   "props": {
+    "state": "approved"
+   }
+  },
+  {
+   "id": "HL-21-A1",
+   "role": "story",
+   "label": "Read a week of gate logs for the fares riders hit",
+   "props": {
+    "status": "done",
+    "key": "TRK-21-A1"
+   }
+  },
+  {
+   "id": "HL-21-A2",
+   "role": "story",
+   "label": "Write the account-based ticketing pattern",
+   "props": {
+    "status": "in progress",
+    "key": "TRK-21-A2"
+   }
+  },
+  {
+   "id": "HL-21-A3",
+   "role": "story",
+   "label": "Take fare capping to the design forum",
+   "props": {
+    "status": "pending",
+    "key": "TRK-21-A3"
+   }
+  },
+  {
+   "id": "HL-22",
+   "role": "epic",
+   "label": "Live arrivals everywhere",
+   "props": {
+    "key": "TRK-22",
+    "work_item_level": "epic",
+    "status": "in progress",
+    "approval": "approved",
+    "goal": "Show the next three arrivals, from real vehicle positions, in the app and on every stop display.",
+    "budget_points": 14,
+    "planned_points": 13
+   }
+  },
+  {
+   "id": "HL-22-D1",
+   "role": "deliverable",
+   "label": "Which stops riders check most, and when",
+   "props": {
+    "state": "approved",
+    "stage": "S1"
+   }
+  },
+  {
+   "id": "HL-22-D2",
+   "role": "deliverable",
+   "label": "Arrival prediction journeys",
+   "props": {
+    "state": "drafted"
+   }
+  },
+  {
+   "id": "HL-22-D3",
+   "role": "deliverable",
+   "label": "Pilot on route 7: predictions against actual arrivals",
+   "props": {
+    "state": "planned"
+   }
+  },
+  {
+   "id": "HL-22-A1",
+   "role": "story",
+   "label": "Rank stops by how often riders check them",
+   "props": {
+    "status": "done",
+    "key": "TRK-22-A1"
+   }
+  },
+  {
+   "id": "HL-22-A2",
+   "role": "story",
+   "label": "Run the route 7 prediction pilot",
+   "props": {
+    "status": "pending",
+    "key": "TRK-22-A2"
+   }
+  },
+  {
+   "id": "HL-23",
+   "role": "epic",
+   "label": "Step-free journeys",
+   "props": {
+    "key": "TRK-23",
+    "work_item_level": "epic",
+    "status": "in progress",
+    "approval": "approved",
+    "goal": "Plan routes that avoid stairs, and reroute when a lift is out of service.",
+    "budget_points": 10,
+    "planned_points": 9
+   }
+  },
+  {
+   "id": "HL-23-D1",
+   "role": "deliverable",
+   "label": "Step-free journeys riders need, with the access forum",
+   "props": {
+    "state": "approved"
+   }
+  },
+  {
+   "id": "HL-23-D2",
+   "role": "deliverable",
+   "label": "Step-free route graph pattern",
+   "props": {
+    "state": "planned",
+    "stage": "S3"
+   }
+  },
+  {
+   "id": "HL-23-A1",
+   "role": "story",
+   "label": "Run the framing session with the access forum",
+   "props": {
+    "status": "done",
+    "key": "TRK-23-A1"
+   }
+  },
+  {
+   "id": "HL-24",
+   "role": "epic",
+   "label": "Every bus, every five seconds",
+   "props": {
+    "key": "TRK-24",
+    "work_item_level": "epic",
+    "status": "in progress",
+    "approval": "approved",
+    "goal": "Stream every vehicle's position and health, so live arrivals and fleet control read the same truth.",
+    "budget_points": 16,
+    "planned_points": 17
+   }
+  },
+  {
+   "id": "HL-24-D1",
+   "role": "deliverable",
+   "label": "Vehicle position stream pattern",
+   "props": {
+    "state": "drafted",
+    "stage": "S4"
+   }
+  },
+  {
+   "id": "HL-24-D2",
+   "role": "deliverable",
+   "label": "Telemetry gateway on the depot network",
+   "props": {
+    "state": "planned"
+   }
+  },
+  {
+   "id": "HL-24-D3",
+   "role": "deliverable",
+   "label": "Stream or poll: the decision for the gateway",
+   "props": {
+    "state": "approved",
+    "stage": "S3"
+   }
+  },
+  {
+   "id": "HL-24-A1",
+   "role": "story",
+   "label": "Decide stream or poll for the depot gateway",
+   "props": {
+    "status": "done",
+    "key": "TRK-24-A1"
+   }
+  },
+  {
+   "id": "HL-24-A2",
+   "role": "story",
+   "label": "Write the vehicle position stream pattern",
+   "props": {
+    "status": "in progress",
+    "key": "TRK-24-A2"
+   }
+  }
+ ],
+ "links": [
+  {
+   "source": "HL-21",
+   "target": "2031-Q2",
+   "p": "scheduledIn"
+  },
+  {
+   "source": "HL-21",
+   "target": "LN-TIX",
+   "p": "advances"
+  },
+  {
+   "source": "HL-21",
+   "target": "IN-ORCA",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-21",
+   "target": "PAT-T1",
+   "p": "refines"
+  },
+  {
+   "source": "HL-21",
+   "target": "INC-TIX-1",
+   "p": "advances"
+  },
+  {
+   "source": "HL-21",
+   "target": "HL-21-D1",
+   "p": "produces"
+  },
+  {
+   "source": "HL-21-D1",
+   "target": "T-NOTE",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-21",
+   "target": "HL-21-D2",
+   "p": "produces"
+  },
+  {
+   "source": "HL-21-D2",
+   "target": "T-PAT",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-21",
+   "target": "HL-21-D3",
+   "p": "produces"
+  },
+  {
+   "source": "HL-21-D3",
+   "target": "T-PHYS",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-21",
+   "target": "HL-21-D4",
+   "p": "produces"
+  },
+  {
+   "source": "HL-21-D4",
+   "target": "T-DEC",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-21",
+   "target": "HL-21-D5",
+   "p": "produces"
+  },
+  {
+   "source": "HL-21-D5",
+   "target": "T-PLAN",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-21-A1",
+   "target": "HL-21",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-21-A1",
+   "target": "HL-21-D1",
+   "p": "produces"
+  },
+  {
+   "source": "HL-21-A2",
+   "target": "HL-21",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-21-A2",
+   "target": "HL-21-D2",
+   "p": "produces"
+  },
+  {
+   "source": "HL-21-A3",
+   "target": "HL-21",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-21-A3",
+   "target": "HL-21-D4",
+   "p": "produces"
+  },
+  {
+   "source": "HL-22",
+   "target": "2031-Q2",
+   "p": "scheduledIn"
+  },
+  {
+   "source": "HL-22",
+   "target": "LN-JRN",
+   "p": "advances"
+  },
+  {
+   "source": "HL-22",
+   "target": "IN-ORCA",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-22",
+   "target": "PAT-T2",
+   "p": "refines"
+  },
+  {
+   "source": "HL-22",
+   "target": "INC-JRN-1",
+   "p": "advances"
+  },
+  {
+   "source": "HL-22",
+   "target": "HL-22-D1",
+   "p": "produces"
+  },
+  {
+   "source": "HL-22-D1",
+   "target": "T-NOTE",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-22",
+   "target": "HL-22-D2",
+   "p": "produces"
+  },
+  {
+   "source": "HL-22-D2",
+   "target": "T-CANVAS",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-22",
+   "target": "HL-22-D3",
+   "p": "produces"
+  },
+  {
+   "source": "HL-22-D3",
+   "target": "T-PILOT",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-22-A1",
+   "target": "HL-22",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-22-A1",
+   "target": "HL-22-D1",
+   "p": "produces"
+  },
+  {
+   "source": "HL-22-A2",
+   "target": "HL-22",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-22-A2",
+   "target": "HL-22-D3",
+   "p": "produces"
+  },
+  {
+   "source": "HL-23",
+   "target": "2031-Q2",
+   "p": "scheduledIn"
+  },
+  {
+   "source": "HL-23",
+   "target": "LN-ACC",
+   "p": "advances"
+  },
+  {
+   "source": "HL-23",
+   "target": "IN-ORCA",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-23",
+   "target": "PAT-T3",
+   "p": "refines"
+  },
+  {
+   "source": "HL-23",
+   "target": "INC-ACC-1",
+   "p": "advances"
+  },
+  {
+   "source": "HL-23",
+   "target": "HL-23-D1",
+   "p": "produces"
+  },
+  {
+   "source": "HL-23-D1",
+   "target": "T-CANVAS",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-23",
+   "target": "HL-23-D2",
+   "p": "produces"
+  },
+  {
+   "source": "HL-23-D2",
+   "target": "T-PAT",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-23-A1",
+   "target": "HL-23",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-23-A1",
+   "target": "HL-23-D1",
+   "p": "produces"
+  },
+  {
+   "source": "HL-24",
+   "target": "2031-Q2",
+   "p": "scheduledIn"
+  },
+  {
+   "source": "HL-24",
+   "target": "LN-FLT",
+   "p": "advances"
+  },
+  {
+   "source": "HL-24",
+   "target": "IN-ORCA",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-24",
+   "target": "PAT-T2",
+   "p": "refines"
+  },
+  {
+   "source": "HL-24",
+   "target": "INC-FLT-1",
+   "p": "advances"
+  },
+  {
+   "source": "HL-24",
+   "target": "HL-24-D1",
+   "p": "produces"
+  },
+  {
+   "source": "HL-24-D1",
+   "target": "T-PAT",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-24",
+   "target": "HL-24-D2",
+   "p": "produces"
+  },
+  {
+   "source": "HL-24-D2",
+   "target": "T-PHYS",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-24",
+   "target": "HL-24-D3",
+   "p": "produces"
+  },
+  {
+   "source": "HL-24-D3",
+   "target": "T-DEC",
+   "p": "typedAs"
+  },
+  {
+   "source": "HL-24-A1",
+   "target": "HL-24",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-24-A1",
+   "target": "HL-24-D3",
+   "p": "produces"
+  },
+  {
+   "source": "HL-24-A2",
+   "target": "HL-24",
+   "p": "partOf"
+  },
+  {
+   "source": "HL-24-A2",
+   "target": "HL-24-D1",
+   "p": "produces"
+  },
+  {
+   "source": "HL-22",
+   "target": "HL-24",
+   "p": "dependsOn"
+  }
+ ]
+}

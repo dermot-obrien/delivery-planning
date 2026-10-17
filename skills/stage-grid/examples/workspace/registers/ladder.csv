@@ -1,0 +1,7 @@
+stage,name,description,builds,band,moved_by,consumable
+R1,Named,Written down that we need it.,Capability catalogue entry,Starting point,,no
+R2,Intended,Said what it is for and what it must support.,Intent on the capability; Scenarios named,Define,architecture,no
+R3,Specified,The shape is fixed; the technology is not.,Patterns published; Building blocks written,Define,architecture,no
+R4,Designed,Technology chosen and the design endorsed.,Physical patterns; Decision endorsed,Design,architecture and forums,no
+R5,Realised,Built and tested outside production.,Stood up in a test estate,Build,delivery,no
+R6,In service,Running in production and owned.,Offered as a product,In service,run,yes
