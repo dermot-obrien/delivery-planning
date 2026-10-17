@@ -86,7 +86,7 @@
       "source": "./",
       "strict": false,
       "description": "Build a clickable knowledge graph of a workspace's work (epics, stories, deliverables, capabilities and increments, patterns, products) from its own records, typed by its own ontology through a graph map, as one HTML page that opens from disk, with a list of broken links.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Dermot O'Brien",
         "url": "https://github.com/dermot-obrien"

@@ -82,18 +82,41 @@ function idSchemes(map, base) {
   for (const r of rows) {
     const role = (spec.roles || {})[r[prefixCol]] || r.role;
     if (!role || !r[patternCol]) continue;
-    try { out.push({re: new RegExp(r[patternCol]), role}); } catch { /* a scheme with a bad pattern is skipped */ }
+    try { out.push({re: new RegExp(r[patternCol]), role, cls: r.class || null}); } catch { /* a scheme with a bad pattern is skipped */ }
   }
   return out;
 }
 
+/** A short slug for a list of classes, for a view's folder: mo:ABB, mo:SBB -> abb-sbb. */
+export function classSlug(classes) {
+  return classes.map((c) => String(c).replace(/^.*[#:/]/, '').toLowerCase()).join('-');
+}
+
+/**
+ * The view a build asks for: a named view from the map's `views`, or a list of classes.
+ * Returns null for the whole graph.
+ */
+export function resolveView(map, {view, classes} = {}) {
+  if (view) {
+    const v = (map.views || {})[view];
+    if (!v) throw new Error(`views.${view}: no such view in the graph map (has: ${Object.keys(map.views || {}).join(', ') || 'none'})`);
+    if (!Array.isArray(v.classes) || !v.classes.length) throw new Error(`views.${view}: needs a list of classes`);
+    return {name: view, ...v};
+  }
+  if (classes && classes.length) return {name: classSlug(classes), classes};
+  return null;
+}
+
 /**
  * Build the graph. `mapFile` is the graph map; `root` is the workspace root, used to find
- * the ontology bindings and a YAML parser.
+ * the ontology bindings and a YAML parser. `view` names one of the map's views, or
+ * `classes` lists classes: either keeps only the records of those classes (and of classes
+ * that extend them) and the links between them, laid out one lane per class.
  */
-export async function build(mapFile, {root = process.cwd()} = {}) {
+export async function build(mapFile, {root = process.cwd(), view: viewName, classes} = {}) {
   const map = JSON.parse(fs.readFileSync(mapFile, 'utf-8'));
   const base = path.dirname(path.resolve(mapFile));
+  const selection = resolveView(map, {view: viewName, classes});
   const vocab = loadRoles();
   const warnings = [];
 
@@ -130,7 +153,10 @@ export async function build(mapFile, {root = process.cwd()} = {}) {
   const nodes = new Map();
   const pending = [];
   const schemes = idSchemes(map, base);
-  const guessRole = (id) => (schemes.find((s) => s.re.test(id)) || {}).role || null;
+  const schemeOf = (id) => schemes.find((s) => s.re.test(id)) || null;
+  const guessRole = (id) => (schemeOf(id) || {}).role || null;
+  // A scheme may name the class too, so ABB-001 and SBB-001 can share a role and differ in class.
+  const schemeClass = (id, role) => { const s = schemeOf(id); return s && s.cls && s.role === role ? s.cls : null; };
 
   const addRecords = (records, spec, source, parent) => {
     for (const rec of records || []) {
@@ -144,7 +170,7 @@ export async function build(mapFile, {root = process.cwd()} = {}) {
         id: key,
         role,
         label: label(rec, spec.label, key),
-        cls: classOf(role, spec.class),
+        cls: classOf(role, spec.class || schemeClass(key, role)),
         url: spec.url && rec[spec.url] ? String(rec[spec.url]) : prev && prev.url,
         props: {...(prev && !prev.stub ? prev.props : {}), ...props(rec, spec.props)},
         source,
@@ -175,14 +201,44 @@ export async function build(mapFile, {root = process.cwd()} = {}) {
     if (!nodes.has(e.to)) {
       const role = e.role || guessRole(e.to) || 'other';
       nodes.set(e.to, e.create
-        ? {id: e.to, role, label: e.to, cls: classOf(role), props: {}, source: 'value'}
-        : {id: e.to, role, label: e.to, cls: classOf(role), props: {}, stub: true, refs: 0});
+        ? {id: e.to, role, label: e.to, cls: classOf(role, schemeClass(e.to, role)), props: {}, source: 'value'}
+        : {id: e.to, role, label: e.to, cls: classOf(role, schemeClass(e.to, role)), props: {}, stub: true, refs: 0});
     }
     const t = nodes.get(e.to);
     if (t.stub) t.refs += 1;
     const [s, d] = e.reverse ? [e.to, e.from] : [e.from, e.to];
     if (s === d) continue;
     links.set(`${s}|${e.p}|${d}`, {source: s, target: d, p: e.p});
+  }
+
+  // A class view: only records of the chosen classes, and the links between them.
+  let classView = null;
+  if (selection) {
+    const iriOf = (c) => (ontology ? ontology.expand(c) : null) || c;
+    const lineage = new Map(); // a node's class IRI -> it and every class it extends
+    const isA = (cls) => {
+      if (!lineage.has(cls)) {
+        const iri = iriOf(cls);
+        const d = ontology ? ontology.describe(iri) : null;
+        lineage.set(cls, new Set([cls, iri, ...(d ? d.extends : [])]));
+      }
+      return lineage.get(cls);
+    };
+    classView = selection.classes.map((c, i) => {
+      const iri = iriOf(c);
+      const d = ontology ? ontology.describe(iri) : null;
+      if (ontology && !d) warnings.push(`classes: ${c} is not a class in the bound ontology`);
+      return {key: d ? d.compact : c, iri, label: (d && d.title) || String(c).replace(/^.*[#:/]/, ''), description: d ? d.description : '', color: i, shape: null, count: 0};
+    });
+    for (const n of [...nodes.values()]) {
+      const k = n.cls ? classView.find((c) => isA(n.cls).has(c.iri) || isA(n.cls).has(c.key)) : null;
+      if (!k) { nodes.delete(n.id); continue; }
+      n.view = k.key;
+      k.count += 1;
+      if (!k.shape && roles[n.role]) k.shape = roles[n.role].shape;
+    }
+    for (const [key, l] of links) if (!nodes.has(l.source) || !nodes.has(l.target)) links.delete(key);
+    for (const c of classView) if (!c.count) warnings.push(`classes: no record is a ${c.key}; check the map's roles, sources and idSchemes`);
   }
 
   // Pages: the record's own route, else the site's identifier manifest.
@@ -214,16 +270,17 @@ export async function build(mapFile, {root = process.cwd()} = {}) {
 
   return {
     meta: {
-      title: map.title || 'Knowledge graph',
+      title: selection ? selection.title || `${map.title || 'Knowledge graph'}: ${classView.map((c) => c.label).join(', ')}` : map.title || 'Knowledge graph',
       generated: new Date().toISOString(),
-      lanes: vocab.lanes,
+      lanes: classView ? classView.map((c) => ({id: c.key, label: c.label})) : vocab.lanes,
+      classView: classView || undefined,
       roles,
       predicates: {...vocab.predicates, ...(map.predicates || {})},
       counts: {nodes: nodes.size, links: links.size},
       gaps,
       expectPages: [...noUrlRoles],
       warnings,
-      view: map.view || {},
+      view: selection ? {depth: selection.depth ?? 0, focus: selection.focus, hide: selection.hide} : map.view || {},
     },
     nodes: all.map(({refs, ...n}) => n),
     links: [...links.values()],

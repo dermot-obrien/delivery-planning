@@ -2,6 +2,17 @@
 
 # Changelog
 
+## [0.2.0] - 2026-10-18
+
+### Added
+
+- Class views: `graph.mjs build --classes <class,class>` draws only the records of those classes (and of classes that extend them) and the links between them, one lane per class, with the Classes tab to hide one. Named views go under `views` in the graph map and are built with `--view <name>`; `graph.mjs views` lists them. A view is written to `<out>/<name>/`, beside the whole graph. `gaps` and `show` take the same options.
+- An identifier scheme may name a `class`, so records and stubs of one role can differ in class (architecture and solution building blocks, say).
+
+### Changed
+
+- A class view with no records exits 1 and writes nothing.
+
 ## [0.1.0] - 2026-10-03
 
 ### Added

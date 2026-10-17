@@ -39,5 +39,8 @@
     {"file": "records/registers.json", "select": "patterns", "role": "pattern", "label": "name", "url": "route"}
   ],
   "links": {"baseUrl": "https://catalogue.example.org/"},
-  "view": {"focus": "2027-Q1", "depth": 2}
+  "view": {"focus": "2027-Q1", "depth": 2},
+  "views": {
+    "delivery": {"title": "Epics and their stories", "classes": ["delivery:Epic", "delivery:Story"]}
+  }
 }

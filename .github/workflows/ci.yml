@@ -83,6 +83,8 @@ jobs:
           node ../../scripts/check.mjs
           node ../../scripts/graph.mjs build
           test -s build/graph/index.html
+          node ../../scripts/graph.mjs build --view delivery
+          test -s build/graph/delivery/index.html
           # PAT-999 is referred to with no record, so gaps must report it and fail.
           if node ../../scripts/graph.mjs gaps; then
             echo "::error::gaps passed over a stub"; exit 1
