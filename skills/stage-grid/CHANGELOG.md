@@ -4,6 +4,12 @@
 
 The bundle's CHANGELOG.md records every release; this file records this skill's.
 
+## [0.1.1] - 2026-10-18
+
+### Changed
+
+- The rules say to bind the whole work graph, never a knowledge-graph class view.
+
 ## [0.1.0] - 2026-10-03
 
 ### Added

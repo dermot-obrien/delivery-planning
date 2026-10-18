@@ -17,6 +17,7 @@ Where to find a working example of each part of `quarter-planning`.
 | A plan document with links | [`tests/fixture/planning/2027-q1/2027-q1-plan.md`](../skills/quarter-planning/tests/fixture/planning/2027-q1/2027-q1-plan.md) | Reference links labelled by epic id, story id and tracker key, before `--links` points them at pages |
 | An epic folder | [`tests/fixture/epics/EP-001-example/index.md`](../skills/quarter-planning/tests/fixture/epics/EP-001-example/index.md) | The hand-written home a card links to. [epic-cards.md](../skills/quarter-planning/references/epic-cards.md) has the recommended outline |
 | Feature requests | [`tests/test_quarter.py`](../skills/quarter-planning/tests/test_quarter.py), the feature-request tests | Request and product registers written by the tests, since the fixture leaves the layer unbound. [feature-requests.md](../skills/quarter-planning/references/feature-requests.md) has the columns |
+| A knowledge graph and a class view | [`skills/knowledge-graph/examples/workspace/`](../skills/knowledge-graph/examples/workspace) | A graph map over JSON and CSV records, typed by two ontology modules, with a `delivery` view of epics and stories. From that folder: `node ../../scripts/graph.mjs build --view delivery` |
 
 ## Running the test workspace
 

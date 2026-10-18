@@ -4,7 +4,7 @@ description: Read a workspace's layered ontology, written as JSON Schema modules
 license: CC-BY-4.0 AND Apache-2.0. Content under CC BY 4.0, code under Apache-2.0; see LICENSE and NOTICE.
 compatibility: Node 18+. No other skills and no npm packages.
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   homepage: https://github.com/dermot-obrien/delivery-planning
 ---
 
@@ -51,6 +51,7 @@ Bind every layer a module extends, or its `$ref`s will not resolve.
 | Explain a class | `ontology.mjs show delivery:Epic`: its IRI, description, what it extends and which fields link to other records |
 | Give the IRI to use for a class | `ontology.mjs show <name> --json` and quote `iri` |
 | Check the modules are complete | `ontology.mjs check`. Report each problem with the class it is in |
+| Show the records of some classes and how they link | Name the classes here, then build a class view with the knowledge-graph skill: `graph.mjs build --classes delivery:Epic,delivery:Story`. A class takes in the classes that extend it |
 | Try modules that are not bound | Add `--module <file>` once per file; it replaces the bound list |
 
 ```bash

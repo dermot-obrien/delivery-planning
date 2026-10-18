@@ -36,7 +36,7 @@
       "source": "./",
       "strict": false,
       "description": "Build a period's stage grid as a single-page app: capability lanes against the stages of the definition ladder, each cell the deliverables that build a lane towards a stage, every block clickable, published with a static site or opened from disk.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Dermot O'Brien",
         "url": "https://github.com/dermot-obrien"
@@ -61,7 +61,7 @@
       "source": "./",
       "strict": false,
       "description": "Read a workspace's layered ontology of JSON Schema modules: list classes, show what a class extends and links to, expand short names to class IRIs, and check every $ref resolves.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Dermot O'Brien",
         "url": "https://github.com/dermot-obrien"

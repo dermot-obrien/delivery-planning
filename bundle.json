@@ -27,8 +27,8 @@
     {
       "name": "stage-grid",
       "path": "skills/stage-grid",
-      "version": "0.1.0",
-      "purl": "pkg:generic/dermot-obrien/delivery-planning/stage-grid@0.1.0",
+      "version": "0.1.1",
+      "purl": "pkg:generic/dermot-obrien/delivery-planning/stage-grid@0.1.1",
       "requires": [],
       "check": {
         "command": [
@@ -42,8 +42,8 @@
     {
       "name": "ontology",
       "path": "skills/ontology",
-      "version": "0.1.0",
-      "purl": "pkg:generic/dermot-obrien/delivery-planning/ontology@0.1.0",
+      "version": "0.1.1",
+      "purl": "pkg:generic/dermot-obrien/delivery-planning/ontology@0.1.1",
       "requires": [],
       "check": {
         "command": [
